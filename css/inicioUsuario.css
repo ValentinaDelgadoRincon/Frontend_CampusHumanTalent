@@ -1,0 +1,197 @@
+:root {
+    --dark-blue: #083b63; 
+    --light-blue: #007bff; 
+    --gray-bg: #e0e0e0;
+    --white: #ffffff;
+    --border-color: #ccc;
+    --score-color: #5c7cfa; 
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--white);
+    margin: 0;
+    padding: 30px;
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 40px;
+}
+
+.welcome-title {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+}
+
+.user-profile {
+    text-align: center;
+}
+
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    background-color: var(--dark-blue);
+    border-radius: 50%;
+    margin: 0 auto 5px;
+    border: 2px solid var(--dark-blue); 
+    position: relative;
+    box-shadow: inset 0 0 0 9999px var(--white);
+    clip-path: circle(50% at 50% 50%);
+}
+.user-avatar::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 25px;
+    background-color: var(--dark-blue);
+    border-radius: 50%;
+}
+.user-avatar::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 15px;
+    background-color: var(--dark-blue);
+    border-radius: 50% 50% 0 0;
+}
+
+
+.user-links {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+.profile-link, .logout-link {
+    color: var(--dark-blue);
+    text-decoration: none;
+    font-weight: bold;
+    margin: 2px 0;
+}
+
+.filter-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.search-input {
+    width: 300px;
+    padding: 10px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 1em;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    border-color: var(--dark-blue);
+}
+
+.select-filter {
+    padding: 10px 15px;
+    margin-left: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    appearance: none; 
+    background: var(--white) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"><path d="M6 9l-4-4 8 0z" fill="%23333"/></svg>') no-repeat right 10px center;
+    background-size: 10px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+
+.cards-container {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.user-card {
+    width: 300px; 
+    background-color: var(--gray-bg);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+.score-badge {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 5px 10px;
+    background-color: var(--score-color);
+    color: var(--white);
+    font-weight: bold;
+    border-bottom-right-radius: 5px;
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+}
+
+.card-content {
+    padding: 40px 20px 20px;
+    text-align: center;
+}
+
+.card-avatar {
+    width: 100px;
+    height: 100px;
+    background-color: var(--dark-blue);
+    border-radius: 50%;
+    margin: 0 auto 20px;   
+    border: 5px solid var(--white);
+    box-shadow: 0 0 0 3px var(--dark-blue);
+}
+
+
+.card-avatar::before {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 50px;
+    background-color: var(--white);
+    border-radius: 50%;
+    margin: 10px auto 0;
+}
+.card-avatar::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 30px;
+    background-color: var(--white);
+    border-radius: 50% 50% 0 0;
+    margin: 0 auto;
+}
+
+
+.card-username {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--dark-blue);
+    margin: 0;
+}
+
+.card-footer {
+    height: 10px;
+    background-color: var(--dark-blue);
+    box-shadow: 0 -5px 0 0 rgba(0, 0, 0, 0.1) inset; 
+}
