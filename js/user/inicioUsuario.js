@@ -128,6 +128,42 @@ document.addEventListener('DOMContentLoaded', () => {
     loadUsers();
 });
 
+(async function showAdminBackIfNeeded(){
+    try {
+        const data = JSON.parse(localStorage.getItem('data'));
+        if (!data || !data.usuario || !data.usuario.id_rol) return;
+
+        const roleId = data.usuario.id_rol;
+        const resp = await fetch(`http://localhost:3000/roles/${roleId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${data.token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!resp.ok) return;
+        const role = await resp.json();
+        const nombreRol = (role.nombre || '').toLowerCase();
+        if (!nombreRol.includes('administrador')) return;
+
+        const userLinks = document.querySelector('.user-links');
+        if (!userLinks) return;
+
+        const backLink = document.createElement('a');
+        backLink.href = '../admin/inicioAdmin.html';
+        backLink.className = 'back-admin-link';
+        backLink.textContent = 'Volver Admin';
+        backLink.style.fontWeight = 'bold';
+        backLink.style.color = '#083b63';
+        backLink.style.margin = '6px 0';
+
+        userLinks.insertBefore(backLink, userLinks.firstChild);
+    } catch (error) {
+        console.error('No se pudo verificar el rol para mostrar el botón admin-back:', error);
+    }
+})();
+
 document.addEventListener('click', (e) => {
     const userCard = e.target.closest('.user-card');
     if (userCard) {

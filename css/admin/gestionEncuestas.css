@@ -1,0 +1,113 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.header-section {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+}
+
+.nav-left {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.back-arrow {
+    font-size: 2rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    background: -webkit-linear-gradient(#0033a0, #00bfff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transform: scaleX(-1);
+    padding: 10px;
+}
+
+.page-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    text-align: center;
+}
+
+.cycle-list {
+    display: flex;
+    gap: 20px;
+    padding: 0 10px;
+    flex-direction: column;
+    align-items: stretch;
+    width: 1000px;
+}
+
+.loading-text {
+    text-align: center;
+    color: #666;
+    font-size: 1.2rem;
+    margin-top: 20px;
+}
+
+.cycle-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    border: 2px solid #2d5086;
+    border-radius: 12px;
+    padding: 20px 30px;
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.cycle-card:hover {
+    background-color: #f0f7ff;
+    border-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.cycle-name {
+    color: #333;
+    font-weight: 600;
+    flex: 1;
+    text-align: left;
+    padding-right: 20px;
+}
+.arrow-separator {
+    color: #888;
+    font-size: 20px;
+    margin: 0 20px;
+    flex-shrink: 0;
+}
+.cycle-score {
+    color: #0d3c75;
+    font-weight: 800;
+    font-size: 18px;
+    text-align: right;
+    white-space: nowrap;
+    min-width: 80px;
+}

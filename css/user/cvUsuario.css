@@ -326,3 +326,72 @@ p {
     border: 1px solid #f5c6cb;
     display: none;
 }
+
+.admin-footer {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #ccc;
+    display: none;
+    flex-display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.admin-btn {
+    flex: 1;
+    min-width: 180px;
+    padding: 15px 10px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-outline {
+    background-color: #ffffff;
+    border: 2px solid #00265a;
+    color: #000;
+}
+
+.btn-outline:hover {
+    background-color: #f0f4f8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bold-text {
+    font-weight: 800;
+    color: #00265a;
+    margin-left: 5px;
+}
+
+.static-box {
+    cursor: default;
+}
+
+.static-box:hover {
+    transform: none;
+    box-shadow: none;
+    background-color: #fff;
+}
+
+@media (max-width: 768px) {
+    .admin-footer {
+        flex-direction: column;
+    }
+
+    .admin-btn {
+        width: 100%;
+    }
+}
+
+.admin-modal {
+    z-index: 9999;
+}

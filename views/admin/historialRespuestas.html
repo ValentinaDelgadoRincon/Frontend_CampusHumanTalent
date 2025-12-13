@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Respuestas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/admin/historialRespuestas.css">
+</head>
+
+<body>
+
+    <div class="main-container">
+
+        <header class="header-section">
+            <div class="nav-left">
+                <a href="#" onclick="window.history.back(); return false;" class="back-arrow fas fa-share"></a>
+            </div>
+            <h1 class="page-title">Historial de Respuestas</h1>
+        </header>
+
+        <div id="evaluationsList" class="evaluations-list">
+            <p class="loading-text">Cargando respuestas...</p>
+        </div>
+
+    </div>
+
+    <script src="../../js/api/RespuestaEncuestasAPI.js"></script>
+    <script src="../../js/api/UsuariosAPI.js"></script>
+    <script src="../../js/admin/historialRespuestas.js"></script>
+</body>
+
+</html>

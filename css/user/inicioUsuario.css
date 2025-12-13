@@ -122,7 +122,10 @@ body {
 .cards-container {
     display: flex;
     gap: 30px;
+    flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-evenly;
+
 }
 
 .user-card {
@@ -133,6 +136,14 @@ body {
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.user-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 12px 20px rgba(8, 59, 99, 0.2);
+    background-color: #f5f5f5;
 }
 
 .required-mark {
@@ -168,6 +179,7 @@ body {
 .card-content {
     padding: 40px 20px 20px;
     text-align: center;
+    cursor: pointer;
 }
 
 .card-avatar {

@@ -42,9 +42,36 @@ if (loginForm && emailInput && passwordInput && btnLogin && msgError) {
             const data = await response.json();
 
             if (response.ok) {
-                    console.log('Token:', data.token);
                     localStorage.setItem('data', JSON.stringify(data));
-                    window.location.href = './views/inicioUsuario.html';
+                    console.log(data);
+                    
+                    try {
+                        const roleId = data.usuario.id_rol;
+                        const roleResponse = await fetch(`http://localhost:3000/roles/${roleId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${data.token}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (roleResponse.ok) {
+                            const roleData = await roleResponse.json();
+                            const nombreRol = (roleData.nombre || '').toLowerCase();
+                            console.log('Rol:', nombreRol);
+
+                            if (nombreRol.includes('administrador')) {
+                                window.location.href = './views/admin/inicioAdmin.html';
+                            } else {
+                                window.location.href = './views/user/inicioUsuario.html';
+                            }
+                        } else {
+                            window.location.href = './views/inicioUsuario.html';
+                        }
+                    } catch (error) {
+                        console.error('Error al obtener el rol:', error);
+                        window.location.href = './views/inicioUsuario.html';
+                    }
                 } else {
                     mostrarError(data.message || 'Usuario o contraseña incorrectos');
                 }
