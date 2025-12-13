@@ -2,22 +2,7 @@ const loginForm = document.getElementById('loginForm');
 const emailInput = document.getElementById('emailInput');
 const passwordInput = document.getElementById('passwordInput');
 const btnLogin = document.getElementById('btnLogin');
-const msgError = document.getElementById('mensaje-error'); 
-
-const usuariosRegistrados = [
-    {
-        email: 'admin@campuslands.com',
-        password: 'admin123',
-        role: 'admin',
-        nombre: 'Admin'
-    },
-    {
-        email: 'user@campuslands.com',
-        password: 'user123',
-        role: 'usuario',
-        nombre: 'Estudiante'
-    }
-];
+const msgError = document.getElementById('mensaje-error');
 
 function mostrarError(mensaje) {
     msgError.innerText = mensaje;
@@ -29,7 +14,7 @@ function mostrarError(mensaje) {
 
 if (loginForm && emailInput && passwordInput && btnLogin && msgError) {
 
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         msgError.style.display = 'none';
@@ -46,28 +31,23 @@ if (loginForm && emailInput && passwordInput && btnLogin && msgError) {
         btnLogin.style.opacity = '0.7';
 
         try {
-            const usuarioEncontrado = usuariosRegistrados.find(u =>
-                u.email === datosUsuario.email &&
-                u.password === datosUsuario.password
-            );
+            const api = 'http://localhost:3000/usuarios/login';
 
-            if (usuarioEncontrado) {
-                console.log('Login Exitoso. Rol:', usuarioEncontrado.role);
+            const response = await fetch(api, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datosUsuario)
+            });
 
-                localStorage.setItem('user_role', usuarioEncontrado.role);
-                localStorage.setItem('user_name', usuarioEncontrado.nombre);
+            const data = await response.json();
 
-                if (usuarioEncontrado.role === 'admin') {
-                    alert(`Bienvenido ${usuarioEncontrado.nombre}. (ADMIN)`);
-                    // window.location.href = '/admin-dashboard.html';
+            if (response.ok) {
+                    console.log('Token:', data.token);
+                    localStorage.setItem('data', JSON.stringify(data));
+                    window.location.href = './views/inicioUsuario.html';
                 } else {
-                    alert(`Bienvenido ${usuarioEncontrado.nombre}. (USUARIO)`);
-                    // window.location.href = '/home.html';
+                    mostrarError(data.message || 'Usuario o contraseña incorrectos');
                 }
-
-            } else {
-                mostrarError('Usuario o contraseña incorrectos');
-            }
 
         } catch (error) {
             console.error("Error inesperado:", error);

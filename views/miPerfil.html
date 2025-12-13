@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario - Edición</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/miPerfil.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="back-arrow">
+            <a href="./inicioUsuario.html" class="fas fa-share"></a>
+        </div>
+
+        <div class="content-wrapper">
+
+            <div class="left-col">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div class="input-box input-name">
+                    Nombre del Usuario
+                </div>
+                <div class="input-box input-edit">
+                    Editar mi información
+                </div>
+            </div>
+
+            <div class="right-col">
+
+                <div class="rating">8.5</div>
+
+                <div class="info-section">
+                    <h3>Cargo</h3>
+                    <p>Descripción del cargo que represento en mi area de trabajo.</p>
+                </div>
+
+                <div class="info-section">
+                    <h3>Área a la que pertenezco</h3>
+                    <p>Descripción y nombre del área a la que pertenezco.</p>
+                </div>
+
+                <div class="info-section">
+                    <h3>Contacto</h3>
+                    <ul class="contact-list">
+                        <li>
+                            <i class="fab fa-linkedin-in"></i>
+                            <a href="#">Agregar link Linkedin</a>
+                        </li>
+                        <li>
+                            <i class="far fa-envelope"></i>
+                            <a href="#">Agregar Gmail</a>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <a href="#">Agregar Número de teléfono</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="btn-save-container">
+                    <button class="btn-save">Guardar</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal" id="editModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Editar mi información</h2>
+                    <button class="close-btn" id="closeModal">&times;</button>
+                </div>
+
+                <form id="editForm" class="modal-body">
+                    <div class="form-group">
+                        <label for="sobreMi">Sobre mí (Descripción)</label>
+                        <textarea id="sobreMi" name="sobreMi" placeholder="Cuéntanos sobre ti..." rows="4"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="linkedIn">LinkedIn URL</label>
+                        <input type="url" id="linkedIn" name="linkedIn" placeholder="https://linkedin.com/in/...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="tu@email.com" disabled>
+                        <small>El correo no puede ser modificado</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono">Teléfono</label>
+                        <input type="tel" id="telefono" name="telefono" placeholder="1234567890">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn-cancel" id="cancelBtn">Cancelar</button>
+                        <button type="submit" class="btn-save">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script src="../js/api/UsuariosAPI.js"></script>
+        <script src="../js/api/Areas_TrabajoAPI.js"></script>
+        <script src="../js/api/CargosAPI.js"></script>
+        <script src="../js/miPerfil.js"></script>
+</body>
+
+</html>

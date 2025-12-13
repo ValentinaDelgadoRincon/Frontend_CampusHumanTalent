@@ -1,69 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienvenido Usuario</title>
     <link rel="stylesheet" href="../css/inicioUsuario.css">
-    </head>
+</head>
+
 <body>
     <div class="main-container">
 
         <header class="header-section">
-            <h1 class="welcome-title">Bienvenido Usuario</h1>
-            
+            <h1 class="welcome-title" id="welcome">Bienvenido Usuario</h1>
             <div class="user-profile">
-                <div class="user-avatar">
-                    <img src="placeholder-user-icon.png" alt="Perfil"> 
-                </div>
                 <div class="user-links">
-                    <a href="#" class="profile-link">VER PERFIL</a>
-                    <a href="#" class="logout-link">CERRAR SESIÓN</a>
+                    <a href="./miPerfil.html" class="profile-link">
+                        <div class="user-avatar">
+                            <img src="placeholder-user-icon.png" alt="Perfil">
+                        </div>
+                        VER PERFIL
+                    </a>
+                    <a href="../index.html" class="logout-link">CERRAR SESIÓN</a>
                 </div>
             </div>
         </header>
-        
+
         <div class="filter-section">
-            <input type="text" placeholder="Buscar" class="search-input">
-            
-            <select class="select-filter">
+            <input type="text" placeholder="Buscar" class="search-input" id="searchInput">
+
+            <select class="select-filter" id="areasSelect">
                 <option value="">Seleccionar</option>
-                <option value="high"></option>
-                <option value="low"></option>
             </select>
         </div>
 
         <div class="cards-container">
-            
-            <div class="user-card">
-                <div class="score-badge">8.5</div>
-                <div class="card-content">
-                    <div class="card-avatar"></div>
-                    <h2 class="card-username">Nombre de Usuario</h2>
-                </div>
-                <div class="card-footer"></div>
-            </div>
-
-            <div class="user-card">
-                <div class="score-badge">9.0</div>
-                <div class="card-content">
-                    <div class="card-avatar"></div>
-                    <h2 class="card-username">Nombre de Usuario</h2>
-                </div>
-                <div class="card-footer"></div>
-            </div>
-            
-            <div class="user-card">
-                <div class="score-badge">7.2</div>
-                <div class="card-content">
-                    <div class="card-avatar"></div>
-                    <h2 class="card-username">Nombre de Usuario</h2>
-                </div>
-                <div class="card-footer"></div>
-            </div>
-
         </div>
 
     </div>
+    <script src="../js/api/UsuariosAPI.js"></script>
+    <script src="../js/api/Areas_TrabajoAPI.js"></script>
+    <script src="../js/inicioUsuario.js"></script>
 </body>
+
 </html>
