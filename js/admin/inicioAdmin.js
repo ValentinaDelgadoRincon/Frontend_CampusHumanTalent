@@ -8,6 +8,13 @@ const cycleModal = document.getElementById('cycleModal');
 const cycleForm = document.getElementById('cycleForm');
 const btnCancelModal = document.getElementById('btnCancelModal');
 const encuestaSelect = document.getElementById('encuestaSelect');
+const btnAddEncuesta = document.getElementById('btnAddEncuesta');
+const addEncuestaContainer = document.getElementById('addEncuestaContainer');
+const gestionEncuestasModal = document.getElementById('gestionEncuestasModal');
+const encuestasListContainer = document.getElementById('encuestasListContainer');
+const btnGuardarEncuestas = document.getElementById('btnGuardarEncuestas');
+const btnCancelGestionEncuestas = document.querySelector('#gestionEncuestasModal .btn-cancel');
+const btnGestionEncuestas = document.getElementById('btnGestionEncuestas');
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (!data || !data.token) {
@@ -195,6 +202,111 @@ window.onclick = (event) => {
     if (event.target == cycleModal) {
         cycleModal.classList.remove('show');
     }
+};
+
+if (btnGestionEncuestas) {
+    btnGestionEncuestas.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            if (addEncuestaContainer) addEncuestaContainer.style.display = 'flex';
+
+            const encuestas = await EncuestasAPI.getAll();
+            renderGestionEncuestas(encuestas);
+            gestionEncuestasModal.classList.add('show');
+        } catch (error) {
+            console.error(error);
+            alert("Error al cargar encuestas");
+        }
+    });
+}
+
+function renderGestionEncuestas(encuestas) {
+    encuestasListContainer.innerHTML = '';
+
+    if (encuestas.length === 0) {
+        encuestasListContainer.innerHTML = '<p style="color:#666; text-align:center">No hay encuestas creadas.</p>';
+    }
+
+    encuestas.forEach(encuesta => {
+        const row = document.createElement('div');
+        row.className = 'encuesta-row';
+        const nombre = encuesta.titulo || encuesta.nombre || `Encuesta ${encuesta._id}`;
+
+        row.innerHTML = `
+            <a href="./gestionEncuesta.html?id=${encuesta._id}&mode=view" class="encuesta-input-fake" style="text-decoration: none; color: inherit; cursor: pointer;">
+                ${nombre}
+            </a>
+            
+            <a href="./gestionEncuesta.html?id=${encuesta._id}&mode=edit" class="btn-edit-small">
+                Editar
+            </a>
+            
+            <div class="trash-icon" onclick="deleteEncuesta('${encuesta._id}')">
+                <i class="fas fa-trash-alt"></i>
+            </div>
+        `;
+        encuestasListContainer.appendChild(row);
+    });
+}
+
+if (btnAddEncuesta) {
+    btnAddEncuesta.addEventListener('click', () => {
+        window.location.href = './gestionEncuesta.html?mode=create';
+    });
+}
+
+if (btnCancelGestionEncuestas) {
+    btnCancelGestionEncuestas.addEventListener('click', () => {
+        gestionEncuestasModal.classList.remove('show');
+    });
+}
+
+if (btnGuardarEncuestas) {
+    btnGuardarEncuestas.addEventListener('click', () => {
+        gestionEncuestasModal.classList.remove('show');
+        const pendingRow = document.getElementById('newEncuestaRow');
+        if (pendingRow) {
+            pendingRow.remove();
+            addEncuestaContainer.style.display = 'flex';
+        }
+    });
+}
+
+window.deleteEncuesta = async (id) => {
+    if (confirm('¿Estás seguro de que deseas eliminar esta encuesta? Esta acción no se puede deshacer.')) {
+        try {
+            const response = await fetch(`http://localhost:3000/encuestas/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${data.token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                alert('Encuesta eliminada correctamente');
+                const encuestas = await EncuestasAPI.getAll();
+                renderGestionEncuestas(encuestas);
+            } else {
+                let errorText = 'No se pudo eliminar la encuesta';
+                try {
+                    const errorData = await response.json();
+                    if (errorData && errorData.mensaje) {
+                        errorText = errorData.mensaje;
+                    }
+                } catch (e) { }
+                alert('Error: ' + errorText);
+            }
+        } catch (error) {
+            console.error('Error eliminando encuesta:', error);
+            alert('Error de conexión al eliminar la encuesta');
+        }
+    }
+};
+
+window.onclick = (event) => {
+    if (event.target == cycleModal) cycleModal.classList.remove('show');
+    if (event.target == gestionEncuestasModal) gestionEncuestasModal.classList.remove('show');
 };
 
 

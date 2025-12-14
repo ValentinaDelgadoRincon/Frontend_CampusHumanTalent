@@ -25,6 +25,7 @@ body {
     margin-bottom: 50px;
     border-bottom: 1px solid #eee;
     padding-bottom: 20px;
+    cursor: default;
 }
 
 .nav-left {
@@ -81,7 +82,7 @@ body {
     color: #333;
     font-size: 18px;
     transition: all 0.2s ease;
-    cursor: pointer;
+    cursor: default;
 }
 
 .cycle-card:hover {

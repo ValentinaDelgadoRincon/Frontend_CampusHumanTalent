@@ -143,7 +143,7 @@ body {
 
 .card-menu:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
     background-color: #e6e6e6;
 }
 
@@ -167,7 +167,7 @@ body {
     .main-content {
         flex-direction: column;
     }
-    
+
     .cycle-panel {
         width: 100%;
         flex-direction: row;
@@ -188,7 +188,7 @@ body {
     .management-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .cycle-panel {
         flex-direction: column;
         align-items: center;
@@ -196,14 +196,14 @@ body {
 }
 
 .modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1000; 
+    display: none;
+    position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
-    width: 100%; 
-    height: 100%; 
-    background-color: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(2px);
     justify-content: center;
     align-items: center;
@@ -221,7 +221,7 @@ body {
     width: 90%;
     max-width: 450px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .modal-content h2 {
@@ -261,7 +261,7 @@ body {
 .select-icon {
     position: absolute;
     right: 15px;
-    top: 35%; 
+    top: 35%;
     color: #3b5c92;
     pointer-events: none;
 }
@@ -301,4 +301,126 @@ body {
 
 .btn-cancel:hover {
     background-color: #fff5f5;
+}
+
+/* --- ESTILOS MODAL GESTIÓN ENCUESTAS --- */
+
+/* Lista scrollable */
+.encuestas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding: 10px 5px;
+}
+
+.encuesta-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+/* Input simulado (Borde azul redondeado) */
+.encuesta-input-fake {
+    flex: 1;
+    border: 2px solid #3b5c92;
+    border-radius: 8px;
+    padding: 10px 15px;
+    text-align: left;
+    color: #555;
+    font-size: 1rem;
+    background-color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Botón Editar (Azul Oscuro) */
+.btn-edit-small {
+    background-color: #00265a;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.3s;
+    border: none;
+}
+
+.btn-edit-small:hover {
+    background-color: #001a3d;
+}
+
+/* Icono Basura (Rojo/Salmon) */
+.trash-icon {
+    background-color: #ff6b6b;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.trash-icon:hover {
+    background-color: #ff4d4d;
+    transform: scale(1.05);
+}
+
+.encuesta-input-editable {
+    flex: 1;
+    border: 2px solid #00265a;
+    /* Azul oscuro */
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    outline: none;
+    color: #333;
+    background-color: white;
+}
+
+.encuesta-input-editable:focus {
+    box-shadow: 0 0 5px rgba(0, 38, 90, 0.3);
+}
+
+/* --- BOTÓN FLOTANTE (+) AZUL --- */
+.btn-circle-plus {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #00265a;
+    /* Azul oscuro */
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s, background 0.3s;
+}
+
+.btn-circle-plus:hover {
+    background-color: #001a3d;
+    transform: scale(1.1);
+}
+
+/* Ajuste scrollbar */
+.encuestas-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.encuestas-list::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
 }

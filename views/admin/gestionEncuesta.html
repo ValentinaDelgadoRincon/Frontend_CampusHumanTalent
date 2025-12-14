@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Encuesta</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/admin/gestionEncuesta.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <header class="header-nav">
+            <a href="../admin/inicioAdmin.html" class="back-arrow fas fa-share"></a>
+            <input type="text" id="surveyTitleInput" class="page-title-input" value="Cargando..." readonly>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="left-column card-box">
+                <div class="column-header">
+                    <h3>Preguntas:</h3>
+                    <button id="btnAddQuestion" class="btn-circle-add hidden">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <div id="surveyQuestionsList" class="questions-list">
+                    <p>Cargando preguntas...</p>
+                </div>
+            </div>
+            <div class="right-column-container">
+                <div id="detailsPanel" class="details-wrapper">
+                    <div class="card-box info-box">
+                        <h3>Tipo de Encuesta:</h3>
+                        <textarea id="tipoEncuestaInput" class="info-input" readonly></textarea>
+                    </div>
+                    <div class="card-box info-box">
+                        <h3>Descripción:</h3>
+                        <textarea id="descripcionInput" class="info-input" rows="3" readonly></textarea>
+                    </div>
+
+                    <div class="card-box info-box">
+                        <h3>Fecha de Creación:</h3>
+                        <p id="fechaCreacion" class="info-text">--/--/----</p>
+                    </div>
+
+                    <div id="saveActionContainer" class="hidden" style="margin-top: 20px; text-align: right;">
+                        <button id="btnSaveChanges" class="btn-save-blue">Guardar Cambios</button>
+                    </div>
+                </div>
+
+                <div id="questionsMenuPanel" class="card-box menu-overlay hidden">
+                    <div class="menu-header">
+                        <h3>Menú de Preguntas:</h3>
+                        <button id="btnCloseMenu" class="close-icon">&times;</button>
+                    </div>
+
+                    <div class="search-box">
+                        <input type="text" id="searchQuestion" placeholder="Buscar pregunta...">
+                    </div>
+
+                    <div id="availableQuestionsList" class="available-list">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="../../js/api/EncuestasAPI.js"></script>
+    <script src="../../js/api/PreguntasAPI.js"></script>
+    <script src="../../js/api/TipoEncuestasAPI.js"></script>
+    <script src="../../js/admin/gestionEncuesta.js"></script>
+</body>
+
+</html>

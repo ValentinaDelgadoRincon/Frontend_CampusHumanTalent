@@ -42,10 +42,30 @@ async function loadSurveyData() {
                 throw new Error('No se especificó un usuario a evaluar');
             }
             usuarioEvaluado = await UsuariosAPI.getById(usuarioEvaluadoId);
-            cicloActivo = await CiclosAPI.getActivo();
+
+            // Obtener ciclo activo. Intentar API helper `getActivo`, si no existe
+            // buscar entre todos los ciclos el que tenga estado 'Abierto'.
+            try {
+                if (typeof CiclosAPI.getActivo === 'function') {
+                    cicloActivo = await CiclosAPI.getActivo();
+                }
+            } catch (e) {
+                cicloActivo = null;
+            }
+
+            if (!cicloActivo) {
+                try {
+                    const ciclosAll = await CiclosAPI.getAll();
+                    cicloActivo = (ciclosAll || []).find(c => c.estado === 'Abierto') || null;
+                } catch (e) {
+                    cicloActivo = null;
+                }
+            }
+
             if (!cicloActivo || cicloActivo.estado !== 'Abierto') {
                 throw new Error('No hay un ciclo de evaluación activo');
             }
+
             var encuestas = await EncuestasAPI.getAll();
         }
         const normalizeId = (v) => {
@@ -90,9 +110,10 @@ async function loadSurveyData() {
 
         const preguntas = await PreguntasAPI.getAll();
 
+        const encuestaQuestionIds = (encuestaActiva.id_preguntas || encuestaActiva.preguntas || []).map(normalizeId);
         const preguntasFiltradas = preguntas.filter(p => {
-            const pid = normalizeId(p.id_encuesta || p.id_encuesta);
-            return !pid || pid === encuestaActiva._id;
+            const pid = normalizeId(p._id);
+            return encuestaQuestionIds.length === 0 ? false : encuestaQuestionIds.includes(pid);
         });
 
         preguntasPorTipo = preguntasFiltradas.reduce((acc, pregunta) => {

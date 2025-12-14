@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Preguntas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/admin/gestionAreas.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <header class="header-section">
+            <div class="nav-left">
+                <a href="#" onclick="window.history.back(); return false;" class="back-arrow fas fa-share"></a>
+            </div>
+            <h1 class="page-title">Gestión de Preguntas</h1>
+        </header>
+        <div id="preguntasList" class="areas-container">
+            <p class="loading-text">Cargando preguntas...</p>
+        </div>
+
+        <button id="fabAdd" class="fab-btn">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+    <div id="formModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Añadir Nueva Pregunta</h2>
+            <form id="preguntaForm">
+                <input type="text" id="nombrePregunta" class="modal-input" placeholder="Escribe el texto de la pregunta"
+                    required>
+                
+                <label for="tipoPreguntaSelect" style="display: block; margin-top: 15px; font-weight: bold; color: #333;">Tipo de Pregunta:</label>
+                <select id="tipoPreguntaSelect" class="modal-input" required style="margin-top: 5px;">
+                    <option value="">-- Seleccionar tipo --</option>
+                </select>
+
+                <label for="tipoRespuestaSelect" style="display: block; margin-top: 15px; font-weight: bold; color: #333;">Tipo de Respuesta:</label>
+                <select id="tipoRespuestaSelect" class="modal-input" required style="margin-top: 5px;">
+                    <option value="">-- Seleccionar tipo --</option>
+                </select>
+
+                <div class="modal-buttons">
+                    <button type="submit" class="btn-primary" id="btnFormAction">Guardar</button>
+                    <button type="button" class="btn-secondary" id="btnCloseForm">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Eliminar Pregunta</h2>
+            <p style="text-align: center; margin-bottom: 20px; color: #555;">¿Estás seguro de que deseas eliminar esta
+                pregunta?</p>
+            <div class="modal-buttons">
+                <button type="button" class="btn-primary" id="btnConfirmDelete">Confirmar</button>
+                <button type="button" class="btn-secondary" id="btnCloseDelete">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/api/PreguntasAPI.js"></script>
+    <script src="../../js/api/TipoPreguntasAPI.js"></script>
+    <script src="../../js/api/TipoRespuestasAPI.js"></script>
+    <script src="../../js/admin/gestionPreguntas.js"></script>
+</body>
+
+</html>
