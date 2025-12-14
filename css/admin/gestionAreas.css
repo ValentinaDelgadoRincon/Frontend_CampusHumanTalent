@@ -29,7 +29,6 @@ body {
     padding-bottom: 80px;
 }
 
-/* --- Header --- */
 .header-section {
     position: relative;
     display: flex;
@@ -61,7 +60,6 @@ body {
     text-align: center;
 }
 
-/* --- Lista de Áreas --- */
 .areas-container {
     display: flex;
     flex-direction: column;
@@ -123,7 +121,6 @@ body {
     color: #ff4444;
 }
 
-/* --- Botón Flotante --- */
 .fab-btn {
     position: fixed;
     bottom: 40px;
@@ -149,7 +146,6 @@ body {
     transform: scale(1.1) rotate(90deg);
 }
 
-/* --- MODAL STYLES (Ajustados a las imágenes) --- */
 .modal {
     display: none; 
     position: fixed; 
@@ -158,7 +154,7 @@ body {
     top: 0;
     width: 100%; 
     height: 100%; 
-    background-color: rgba(0,0,0,0.6); /* Fondo oscurecido */
+    background-color: rgba(0,0,0,0.6);
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(2px);
@@ -171,11 +167,11 @@ body {
 .modal-content {
     background-color: white;
     padding: 30px;
-    border-radius: 20px; /* Bordes redondeados */
+    border-radius: 20px;
     width: 90%;
     max-width: 450px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    border: 3px solid var(--dark-blue); /* Borde azul del modal */
+    border: 3px solid var(--dark-blue);
     text-align: center;
 }
 
@@ -190,7 +186,7 @@ body {
     width: 100%;
     padding: 12px 15px;
     margin-bottom: 30px;
-    border: 2px solid var(--dark-blue); /* Borde azul del input */
+    border: 2px solid var(--dark-blue);
     border-radius: 8px;
     font-size: 1rem;
     outline: none;
@@ -213,7 +209,6 @@ body {
     transition: all 0.3s;
 }
 
-/* Botón Guardar/Confirmar (Azul Sólido) */
 .btn-primary {
     background-color: var(--dark-blue);
     color: white;
@@ -224,7 +219,6 @@ body {
     background-color: #002050;
 }
 
-/* Botón Cancelar (Blanco con borde Rojo/Salmón) */
 .btn-secondary {
     background-color: white;
     border: 2px solid var(--cancel-red);

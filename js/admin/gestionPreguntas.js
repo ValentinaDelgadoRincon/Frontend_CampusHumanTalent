@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
     
-    // Cargar tipos de preguntas y respuestas
     await loadTipos();
     loadPreguntas();
 });
@@ -73,7 +72,6 @@ function renderPreguntas(preguntas) {
 }
 
 function renderTipoSelects() {
-    // Limpiar y llenar tipo de preguntas
     tipoPreguntaSelect.innerHTML = '<option value="">-- Seleccionar tipo --</option>';
     tiposPreguntas.forEach(tipo => {
         const option = document.createElement('option');
@@ -82,7 +80,6 @@ function renderTipoSelects() {
         tipoPreguntaSelect.appendChild(option);
     });
 
-    // Limpiar y llenar tipo de respuestas
     tipoRespuestaSelect.innerHTML = '<option value="">-- Seleccionar tipo --</option>';
     tiposRespuestas.forEach(tipo => {
         const option = document.createElement('option');

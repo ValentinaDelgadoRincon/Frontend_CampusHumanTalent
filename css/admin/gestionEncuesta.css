@@ -24,7 +24,6 @@ body {
     margin: 0 auto;
 }
 
-/* --- Header --- */
 .header-nav {
     display: flex;
     align-items: center;
@@ -45,7 +44,6 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
-/* Título como input transparente */
 .page-title-input {
     font-size: 2rem;
     font-weight: 800;
@@ -58,29 +56,25 @@ body {
     border-radius: 10px;
 }
 
-/* Estado editable del título */
 .page-title-input.editable {
     border-color: var(--border-blue);
     background-color: #fff;
 }
 
-/* --- Layout Principal --- */
 .content-wrapper {
     display: flex;
     gap: 40px;
     align-items: flex-start;
-    height: 70vh; /* Altura fija para permitir scroll interno */
+    height: 70vh;
 }
 
-/* Estilo base de caja con borde azul */
 .card-box {
     border: 2px solid var(--border-blue);
     border-radius: 10px;
-    background-color: #f2f2f2; /* Gris claro de fondo */
+    background-color: #f2f2f2;
     padding: 20px;
 }
 
-/* --- Columna Izquierda (Preguntas Actuales) --- */
 .left-column {
     flex: 1;
     height: 100%;
@@ -104,12 +98,12 @@ body {
 }
 
 .btn-circle-add {
-    background-color: #8ab4f8; /* Azul claro icono */
+    background-color: #8ab4f8;
     border: 2px solid var(--dark-blue);
     color: var(--dark-blue);
     width: 35px;
     height: 35px;
-    border-radius: 50%; /* Forma de gota invertida o circular */
+    border-radius: 50%;
     border-bottom-right-radius: 0; 
     cursor: pointer;
     display: flex;
@@ -156,14 +150,12 @@ body {
     background-color: #ff4d4d;
 }
 
-/* --- Columna Derecha (Contenedor) --- */
 .right-column-container {
     flex: 1;
     height: 100%;
-    position: relative; /* Para posicionar el overlay */
+    position: relative;
 }
 
-/* Panel Detalles */
 .details-wrapper {
     display: flex;
     flex-direction: column;
@@ -194,7 +186,6 @@ body {
     background-color: white;
 }
 
-/* Quitar estilo de input si es readonly en modo ver */
 .info-input[readonly] {
     border: none;
     background: transparent;
@@ -202,14 +193,13 @@ body {
     color: #666;
 }
 
-/* Panel Menú Preguntas (Overlay - Imagen 3) */
 .menu-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #d9d9d9; /* Gris más oscuro como imagen 3 */
+    background-color: #d9d9d9;
     z-index: 10;
     display: flex;
     flex-direction: column;
@@ -254,7 +244,6 @@ body {
     background-color: #e0e0e0;
 }
 
-/* Utilidades */
 .hidden {
     display: none !important;
 }
@@ -282,10 +271,10 @@ body {
     opacity: 0.6;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
 }
+
 ::-webkit-scrollbar-thumb {
     background-color: #bbb;
     border-radius: 3px;

@@ -303,9 +303,6 @@ body {
     background-color: #fff5f5;
 }
 
-/* --- ESTILOS MODAL GESTIÓN ENCUESTAS --- */
-
-/* Lista scrollable */
 .encuestas-list {
     display: flex;
     flex-direction: column;
@@ -322,7 +319,6 @@ body {
     width: 100%;
 }
 
-/* Input simulado (Borde azul redondeado) */
 .encuesta-input-fake {
     flex: 1;
     border: 2px solid #3b5c92;
@@ -337,7 +333,6 @@ body {
     text-overflow: ellipsis;
 }
 
-/* Botón Editar (Azul Oscuro) */
 .btn-edit-small {
     background-color: #00265a;
     color: white;
@@ -355,7 +350,6 @@ body {
     background-color: #001a3d;
 }
 
-/* Icono Basura (Rojo/Salmon) */
 .trash-icon {
     background-color: #ff6b6b;
     color: white;
@@ -379,7 +373,6 @@ body {
 .encuesta-input-editable {
     flex: 1;
     border: 2px solid #00265a;
-    /* Azul oscuro */
     border-radius: 8px;
     padding: 10px 15px;
     font-size: 1rem;
@@ -392,13 +385,11 @@ body {
     box-shadow: 0 0 5px rgba(0, 38, 90, 0.3);
 }
 
-/* --- BOTÓN FLOTANTE (+) AZUL --- */
 .btn-circle-plus {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     background-color: #00265a;
-    /* Azul oscuro */
     color: white;
     border: none;
     font-size: 1.5rem;
@@ -415,7 +406,6 @@ body {
     transform: scale(1.1);
 }
 
-/* Ajuste scrollbar */
 .encuestas-list::-webkit-scrollbar {
     width: 8px;
 }

@@ -43,8 +43,6 @@ async function loadSurveyData() {
             }
             usuarioEvaluado = await UsuariosAPI.getById(usuarioEvaluadoId);
 
-            // Obtener ciclo activo. Intentar API helper `getActivo`, si no existe
-            // buscar entre todos los ciclos el que tenga estado 'Abierto'.
             try {
                 if (typeof CiclosAPI.getActivo === 'function') {
                     cicloActivo = await CiclosAPI.getActivo();
