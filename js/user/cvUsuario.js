@@ -135,10 +135,27 @@ async function setupAdminButtons() {
 
         showAdminButtons();
         configureAdminButtonListeners();
+        replaceCalificarWithEditar();
     } catch (error) {
         console.error('Error verificando rol de administrador:', error);
         hideAdminButtons();
     }
+}
+
+function replaceCalificarWithEditar() {
+    const btnCalificar = document.getElementById('btnCalificarUser');
+    if (!btnCalificar) return;
+
+    btnCalificar.textContent = 'Editar';
+    btnCalificar.removeAttribute('href');
+    btnCalificar.style.cursor = 'pointer';
+
+    const newBtn = btnCalificar.cloneNode(true);
+    newBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        openAdminEditModal();
+    });
+    btnCalificar.parentNode.replaceChild(newBtn, btnCalificar);
 }
 
 function hideAdminButtons() {
@@ -159,6 +176,7 @@ function configureAdminButtonListeners() {
     const btnDeshabilitar = document.getElementById('btnDeshabilitar');
     const btnHistorial = document.getElementById('btnHistorial');
     const btnVerCalificaciones = document.getElementById('btnVerCalificaciones');
+    const btnEditarInfo = document.getElementById('btnEditarInfo');
 
     const extractId = (ref) => {
         if (!ref) return null;
@@ -227,6 +245,20 @@ function configureAdminButtonListeners() {
         }
     });
 
+
+    if (btnEditarInfo) {
+        btnEditarInfo.addEventListener('click', () => openAdminEditModal());
+    }
+
+    const closeModalBtn = document.getElementById('closeModal');
+    if (closeModalBtn) closeModalBtn.addEventListener('click', () => closeAdminEditModal());
+
+    const cancelBtn = document.getElementById('cancelBtn');
+    if (cancelBtn) cancelBtn.addEventListener('click', () => closeAdminEditModal());
+
+    const editForm = document.getElementById('editForm');
+    if (editForm) editForm.addEventListener('submit', saveAdminEditForm);
+
     btnHistorial.addEventListener('click', () => {
         window.location.href = `../admin/historialCiclos.html?id=${usuarioActual._id}`;
     });
@@ -234,4 +266,80 @@ function configureAdminButtonListeners() {
     btnVerCalificaciones.addEventListener('click', () => {
         window.location.href = `../admin/historialRespuestas.html?id=${usuarioActual._id}`;
     });
+}
+
+function openAdminEditModal() {
+    const modal = document.getElementById('editModal');
+    if (!modal || !usuarioActual) return;
+    const sobreMiInput = document.getElementById('sobreMi');
+    const linkedInInput = document.getElementById('linkedIn');
+    const emailInput = document.getElementById('email');
+    const telefonoInput = document.getElementById('telefono');
+    const nombreInput = document.getElementById('nombre');
+    const apellidoInput = document.getElementById('apellido');
+
+    if (sobreMiInput) sobreMiInput.value = usuarioActual.sobremi || '';
+    if (linkedInInput) linkedInInput.value = usuarioActual.linkedIn || '';
+    if (emailInput) emailInput.value = usuarioActual.email || '';
+    if (telefonoInput) telefonoInput.value = usuarioActual.telefono || '';
+    if (nombreInput) nombreInput.value = usuarioActual.nombre || '';
+    if (apellidoInput) apellidoInput.value = usuarioActual.apellido || '';
+
+    modal.classList.add('show');
+}
+
+function closeAdminEditModal() {
+    const modal = document.getElementById('editModal');
+    if (modal) modal.classList.remove('show');
+}
+
+async function saveAdminEditForm(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (!usuarioActual) return;
+
+    const sobreMiInput = document.getElementById('sobreMi');
+    const linkedInInput = document.getElementById('linkedIn');
+    const telefonoInput = document.getElementById('telefono');
+    const nombreInput = document.getElementById('nombre');
+    const apellidoInput = document.getElementById('apellido');
+    const emailInput = document.getElementById('email');
+
+    const updateData = {
+        nombre: nombreInput ? nombreInput.value : '',
+        apellido: apellidoInput ? apellidoInput.value : '',
+        email: emailInput ? emailInput.value : '',
+        sobremi: sobreMiInput ? sobreMiInput.value : '',
+        linkedIn: linkedInInput ? linkedInInput.value : '',
+        telefono: telefonoInput ? telefonoInput.value : ''
+    };
+
+    try {
+        const resp = await fetch(`http://localhost:3000/usuarios/admin/${usuarioActual._id}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${data.token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateData)
+        });
+
+        if (!resp.ok) {
+            let errMsg = `Error ${resp.status}`;
+            try {
+                const errBody = await resp.json();
+                errMsg = errBody.mensaje || errBody.message || errMsg;
+            } catch (e) { }
+            throw new Error(errMsg);
+        }
+
+        try { await resp.json(); } catch (e) { }
+
+        usuarioActual = { ...usuarioActual, ...updateData };
+        renderUserInfo(usuarioActual);
+        closeAdminEditModal();
+        alert('Información actualizada correctamente.');
+    } catch (error) {
+        console.error('Error al guardar datos:', error);
+        alert('Error al guardar los datos: ' + (error.message || error));
+    }
 }

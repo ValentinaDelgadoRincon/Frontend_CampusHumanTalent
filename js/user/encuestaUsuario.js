@@ -125,6 +125,51 @@ async function loadSurveyData() {
 
         renderSurveyForm();
 
+        try {
+            const form = document.querySelector('form');
+            const submitBtn = form.querySelector('.btn-enviar');
+
+            const updateSubmitState = () => {
+                const radios = Array.from(form.querySelectorAll('input[type="radio"]'));
+                const names = [...new Set(radios.map(r => r.name))];
+                if (names.length === 0) {
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.style.backgroundColor = '#ccc';
+                        submitBtn.style.cursor = 'not-allowed';
+                    }
+                    return;
+                }
+
+                let answered = 0;
+                names.forEach(name => {
+                    if (form.querySelector(`input[name="${name}"]:checked`)) answered++;
+                });
+
+                const allAnswered = (answered === names.length);
+                if (submitBtn) {
+                    submitBtn.disabled = !allAnswered;
+                    if (!allAnswered) {
+                        submitBtn.style.backgroundColor = '#ccc';
+                        submitBtn.style.cursor = 'not-allowed';
+                        submitBtn.style.opacity = '0.8';
+                    } else {
+                        submitBtn.style.backgroundColor = '';
+                        submitBtn.style.cursor = '';
+                        submitBtn.style.opacity = '';
+                    }
+                }
+            };
+
+            form.querySelectorAll('input[type="radio"]').forEach(r => {
+                r.addEventListener('change', updateSubmitState);
+            });
+
+            updateSubmitState();
+        } catch (e) {
+            console.warn('No se pudo inicializar validación de envío:', e);
+        }
+
         if (responseObj) {
             document.body.classList.add('read-only');
             applyResponseAnswers(responseObj);
@@ -237,6 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         
         try {
+            const radios = Array.from(form.querySelectorAll('input[type="radio"]'));
+            const names = [...new Set(radios.map(r => r.name))];
+            let answeredCount = 0;
+            names.forEach(name => { if (form.querySelector(`input[name="${name}"]:checked`)) answeredCount++; });
+            if (names.length === 0 || answeredCount !== names.length) {
+                alert('Por favor responde todas las preguntas antes de enviar');
+                return;
+            }
             const respuestas = [];
             const formElements = form.elements;
 
