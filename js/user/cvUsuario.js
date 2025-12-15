@@ -160,47 +160,70 @@ function configureAdminButtonListeners() {
     const btnHistorial = document.getElementById('btnHistorial');
     const btnVerCalificaciones = document.getElementById('btnVerCalificaciones');
 
+    const extractId = (ref) => {
+        if (!ref) return null;
+        if (typeof ref === 'string') return ref;
+        if (ref.$oid) return ref.$oid;
+        if (ref._id) return (typeof ref._id === 'string') ? ref._id : (ref._id.$oid || null);
+        return null;
+    };
+
+    const ESTADO_ACTIVO = '693cef998a9247fb779a70c1';
+    const ESTADO_INACTIVO = '693cef998a9247fb779a70c2';
+
+    const updateToggleButton = () => {
+        if (!btnDeshabilitar) return;
+        const estadoId = extractId(usuarioActual?.id_estado) || '';
+        if (estadoId === ESTADO_INACTIVO) {
+            btnDeshabilitar.textContent = 'Habilitar';
+            btnDeshabilitar.disabled = false;
+        } else {
+            btnDeshabilitar.textContent = 'Deshabilitar';
+            btnDeshabilitar.disabled = false;
+        }
+    };
+
+    updateToggleButton();
+
     btnDeshabilitar.addEventListener('click', async () => {
         if (!usuarioActual) return;
 
-        const confirmAction = confirm(`¿Estás seguro de que deseas deshabilitar a ${usuarioActual.nombre}?`);
-        if (confirmAction) {
-            try {
-                const estadoInactivoId = '693cef998a9247fb779a70c2';
+        const estadoId = extractId(usuarioActual.id_estado);
+        const isCurrentlyInactive = (estadoId === ESTADO_INACTIVO);
+        const targetEstado = isCurrentlyInactive ? ESTADO_ACTIVO : ESTADO_INACTIVO;
+        const actionText = isCurrentlyInactive ? 'habilitar' : 'deshabilitar';
 
-                const resp = await fetch(`http://localhost:3000/usuarios/admin/${usuarioActual._id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `Bearer ${data.token}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ id_estado: estadoInactivoId })
-                });
+        const confirmAction = confirm(`¿Estás seguro de que deseas ${actionText} a ${usuarioActual.nombre}?`);
+        if (!confirmAction) return;
 
-                if (!resp.ok) {
-                    let errMsg = `Error ${resp.status}`;
-                    try {
-                        const errBody = await resp.json();
-                        errMsg = errBody.mensaje || errBody.message || errMsg;
-                    } catch (e) { }
-                    throw new Error(errMsg);
-                }
+        try {
+            const resp = await fetch(`http://localhost:3000/usuarios/admin/${usuarioActual._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${data.token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id_estado: targetEstado })
+            });
 
-                let result = null;
-                try { result = await resp.json(); } catch (e) { }
-
-                usuarioActual.id_estado = estadoInactivoId;
-                const btnDeshabilitarEl = document.getElementById('btnDeshabilitar');
-                if (btnDeshabilitarEl) {
-                    btnDeshabilitarEl.disabled = true;
-                    btnDeshabilitarEl.textContent = 'Deshabilitado';
-                }
-
-                alert('Usuario deshabilitado correctamente.');
-            } catch (error) {
-                console.error(error);
-                alert('Error al deshabilitar usuario: ' + (error.message || error));
+            if (!resp.ok) {
+                let errMsg = `Error ${resp.status}`;
+                try {
+                    const errBody = await resp.json();
+                    errMsg = errBody.mensaje || errBody.message || errMsg;
+                } catch (e) { }
+                throw new Error(errMsg);
             }
+
+            try { await resp.json(); } catch (e) { }
+
+            usuarioActual.id_estado = targetEstado;
+            updateToggleButton();
+
+            alert(`Usuario ${isCurrentlyInactive ? 'habilitado' : 'deshabilitado'} correctamente.`);
+        } catch (error) {
+            console.error(error);
+            alert('Error al cambiar el estado del usuario: ' + (error.message || error));
         }
     });
 

@@ -57,7 +57,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             fechaCreacionTxt.textContent = new Date().toLocaleDateString();
             surveyQuestionsIds = [];
             renderSurveyQuestions();
+            originalSurveyData = { nombre: '', descripcion: '', id_preguntas: [] };
+            btnSaveChanges.disabled = true;
             setupMode();
+            attachChangeListeners();
         } catch (error) {
             console.error('Error preparando modo creación:', error);
         }
@@ -136,14 +139,17 @@ async function loadSurveyData() {
 function hasChanges() {
     const currentNombre = titleInput.value.trim();
     const currentDescripcion = descripcionInput.value.trim();
-    
-    if (currentNombre !== originalSurveyData.nombre) return true;
-    
-    if (currentDescripcion !== originalSurveyData.descripcion) return true;
-    
-    if (surveyQuestionsIds.length !== originalSurveyData.id_preguntas.length) return true;
-    if (!surveyQuestionsIds.every((id, idx) => id === originalSurveyData.id_preguntas[idx])) return true;
-    
+
+    const origNombre = originalSurveyData.nombre || '';
+    const origDescripcion = originalSurveyData.descripcion || '';
+    const origIds = Array.isArray(originalSurveyData.id_preguntas) ? originalSurveyData.id_preguntas : [];
+
+    if (currentNombre !== origNombre) return true;
+    if (currentDescripcion !== origDescripcion) return true;
+
+    if (surveyQuestionsIds.length !== origIds.length) return true;
+    if (!surveyQuestionsIds.every((id, idx) => id === origIds[idx])) return true;
+
     return false;
 }
 
@@ -171,7 +177,7 @@ function renderSurveyQuestions() {
         item.className = 'question-item';
         
         let trashButton = '';
-        if (mode === 'edit') {
+        if (mode === 'edit' || mode === 'create') {
             trashButton = `<button class="trash-btn" onclick="removeQuestion('${qId}')"><i class="fas fa-trash-alt"></i></button>`;
         }
 

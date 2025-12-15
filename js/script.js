@@ -41,7 +41,25 @@ if (loginForm && emailInput && passwordInput && btnLogin && msgError) {
 
             const data = await response.json();
 
+            const extractId = (ref) => {
+                if (!ref) return null;
+                if (typeof ref === 'string') return ref;
+                if (ref.$oid) return ref.$oid;
+                if (ref['$oid']) return ref['$oid'];
+                if (ref._id) return (typeof ref._id === 'string') ? ref._id : (ref._id.$oid || null);
+                return null;
+            };
+
             if (response.ok) {
+                    const usuario = data.usuario || {};
+                    const estadoId = extractId(usuario.id_estado) || extractId(usuario.idEstado) || null;
+                    const INACTIVO_ID = '693cef998a9247fb779a70c2';
+
+                    if (estadoId === INACTIVO_ID) {
+                        mostrarError('Este usuario se encuentra inhabilitado');
+                        return;
+                    }
+
                     localStorage.setItem('data', JSON.stringify(data));
                     console.log(data);
                     

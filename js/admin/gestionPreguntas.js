@@ -146,7 +146,7 @@ preguntaForm.addEventListener('submit', async (e) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ 
-                texto: textoValue,
+                pregunta: textoValue,
                 id_tipo_pregunta: idTipoPregunta,
                 id_tipo_respuesta: idTipoRespuesta
             })

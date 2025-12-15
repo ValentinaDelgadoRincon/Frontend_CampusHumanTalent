@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 btnLogout.addEventListener('click', (e) => {
     e.preventDefault();
     localStorage.removeItem('data');
-    window.location.href = '../index.html';
+    window.location.href = '../../index.html';
 });
 
 async function validateAdminRole() {
