@@ -18,7 +18,7 @@ const btnGestionEncuestas = document.getElementById('btnGestionEncuestas');
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (!data || !data.token) {
-        window.location.href = '../index.html';
+        window.location.href = '../../index.html';
         return;
     }
 
