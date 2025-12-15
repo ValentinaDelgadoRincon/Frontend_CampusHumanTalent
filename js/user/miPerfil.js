@@ -89,10 +89,11 @@ function fillUserInfo(user) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const editBtn = document.querySelector('.input-edit');
-    const closeBtn = document.getElementById('closeBtn');
+    const closeBtn = document.getElementById('closeModal');
     const cancelBtn = document.getElementById('cancelBtn');
     const editForm = document.getElementById('editForm');
     const modal = document.getElementById('editModal');
+    
 
     if (editBtn) {
         editBtn.addEventListener('click', () => {
