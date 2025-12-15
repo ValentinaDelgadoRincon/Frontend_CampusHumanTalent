@@ -51,10 +51,10 @@ body {
 }
 
 .login-box {
-    background-color: #d1d0d0dc;
+    background-color: #a2e7f891;
     padding: 40px;
     border-radius: 15px; 
-    border: #adacac 4px solid;
+    border: #d0db6e 4px solid;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     display: flex;
     flex-direction: column;

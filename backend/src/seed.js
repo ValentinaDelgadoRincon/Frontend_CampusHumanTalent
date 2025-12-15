@@ -73,10 +73,8 @@ async function seed() {
 
         // 5. Insertar Tipos de Preguntas
         const tiposPreguntas = await TipoPregunta.insertMany([
-            { nombre: "Trabajo en Equipo" },
-            { nombre: "Habilidades Adaptativas" },
-            { nombre: "Ética y Profesionalismo" },
-            { nombre: "Desempeño y Proactividad" }
+            { nombre: "Actitudinal" },
+            { nombre: "Aptitudinal" }
         ]);
         console.log(`✅ ${tiposPreguntas.length} tipos de preguntas creados`);
 
@@ -103,21 +101,21 @@ async function seed() {
             { pregunta: "¿Contribuye a un ambiente positivo y seguro?", id_tipo_pregunta: tiposPreguntas[0]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
             { pregunta: "¿Muestra empatía y consideración hacia los demás?", id_tipo_pregunta: tiposPreguntas[0]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
             { pregunta: "¿Gestiona las diferencias sin generar tensión innecesaria?", id_tipo_pregunta: tiposPreguntas[0]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Maneja adecuadamente sus emociones en momentos retadores?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Aprende con rapidez y aplica lo aprendido?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Propone soluciones en lugar de enfocarse solo en el problema?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Busca apoyo cuando lo necesita?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Se adapta de manera flexible ante cambios o presión?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Mantiene la confidencialidad cuando corresponde?", id_tipo_pregunta: tiposPreguntas[2]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Toma decisiones éticas, incluso cuando son difíciles?", id_tipo_pregunta: tiposPreguntas[2]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Respeta normas internas y acuerdos del equipo?", id_tipo_pregunta: tiposPreguntas[2]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Es coherente entre lo que dice y lo que hace?", id_tipo_pregunta: tiposPreguntas[2]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Actúa ante situaciones injustas o irregulares, promoviendo lo correcto?", id_tipo_pregunta: tiposPreguntas[2]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Cumple con los compromisos y tiempos establecidos?", id_tipo_pregunta: tiposPreguntas[3]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Propone ideas para mejorar procesos o resultados?", id_tipo_pregunta: tiposPreguntas[3]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Toma iniciativa sin necesidad de recibir instrucciones para todo?", id_tipo_pregunta: tiposPreguntas[3]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Trabaja con enfoque y autonomía?", id_tipo_pregunta: tiposPreguntas[3]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
-            { pregunta: "¿Mantiene un alto nivel de calidad en sus entregas?", id_tipo_pregunta: tiposPreguntas[3]._id, id_tipo_respuesta: tiposRespuestas[0]._id }
+            { pregunta: "¿Maneja adecuadamente sus emociones en momentos retadores?", id_tipo_pregunta: tiposPreguntas[0]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Aprende con rapidez y aplica lo aprendido?", id_tipo_pregunta: tiposPreguntas[0]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Propone soluciones en lugar de enfocarse solo en el problema?", id_tipo_pregunta: tiposPreguntas[0]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Busca apoyo cuando lo necesita?", id_tipo_pregunta: tiposPreguntas[0]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Se adapta de manera flexible ante cambios o presión?", id_tipo_pregunta: tiposPreguntas[0]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Mantiene la confidencialidad cuando corresponde?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Toma decisiones éticas, incluso cuando son difíciles?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Respeta normas internas y acuerdos del equipo?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Es coherente entre lo que dice y lo que hace?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Actúa ante situaciones injustas o irregulares, promoviendo lo correcto?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Cumple con los compromisos y tiempos establecidos?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Propone ideas para mejorar procesos o resultados?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Toma iniciativa sin necesidad de recibir instrucciones para todo?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Trabaja con enfoque y autonomía?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id },
+            { pregunta: "¿Mantiene un alto nivel de calidad en sus entregas?", id_tipo_pregunta: tiposPreguntas[1]._id, id_tipo_respuesta: tiposRespuestas[0]._id }
         ]);
         console.log(`✅ ${preguntas.length} preguntas creadas`);
 
