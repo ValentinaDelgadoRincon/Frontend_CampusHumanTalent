@@ -30,7 +30,7 @@ async function loadSelectOptions() {
                     'Content-Type': 'application/json'
                 }
             }).then(res => res.json()),
-            fetch(`http://localhost:3000/cargos`, {
+            fetch(`http://localhost:3000/estados`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
@@ -44,10 +44,10 @@ async function loadSelectOptions() {
             return acc;
         }, {});
 
-        estadosCache = {
-            'Activo': '693cef998a9247fb779a70c1',
-            'Inactivo': '693cef998a9247fb779a70c2'
-        };
+        estadosCache = estados.reduce((acc, estado) => {
+            acc[estado.nombre] = estado._id;
+            return acc;
+        }, {});
 
         areas.forEach(area => {
             const option = document.createElement('option');

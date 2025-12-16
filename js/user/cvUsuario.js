@@ -1,6 +1,7 @@
 const data = JSON.parse(localStorage.getItem('data'));
 let areasCache = {};
 let cargosCache = {};
+let estadosCache = {};
 let usuarioActual = null;
 
 function getUserIdFromURL() {
@@ -22,13 +23,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadAreasAndCargos() {
     try {
-        const [areas, cargos] = await Promise.all([
+        const [areas, cargos, estados] = await Promise.all([
             Areas_TrabajoAPI.getAll(),
-            CargosAPI.getAll()
+            CargosAPI.getAll(),
+            fetch(`http://localhost:3000/estados`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${data.token}`,
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => res.json())
         ]);
 
         areasCache = areas.reduce((acc, item) => ({ ...acc, [item._id]: item.nombre }), {});
         cargosCache = cargos.reduce((acc, item) => ({ ...acc, [item._id]: item.nombre }), {});
+        estadosCache = (estados || []).reduce((acc, item) => {
+            acc[item.nombre] = item._id;
+            return acc;
+        }, {});
+
     } catch (error) {
         console.error("Error cargando catálogos:", error);
     }
@@ -54,9 +67,22 @@ async function loadUserProfile() {
 function renderUserInfo(user) {
     document.querySelector('.user-name').textContent = `${user.nombre} ${user.apellido}`;
     document.querySelector('.user-desc').textContent = user.sobremi || 'Sin descripción profesional.';
-
     document.getElementById('userCargo').textContent = cargosCache[user.id_cargo] || 'No definido';
     document.getElementById('userArea').textContent = areasCache[user.id_area_trabajo] || 'No definida';
+
+    const imgElement = document.getElementById('userProfileImage');
+    const iconElement = document.getElementById('defaultUserIcon');
+    if (user.foto) {
+        const imgSrc = user.foto.startsWith('http') ? user.foto : `http://localhost:3000/${user.foto}`;
+        if (imgElement) {
+            imgElement.src = imgSrc;
+            imgElement.style.display = 'block';
+        }
+        if (iconElement) iconElement.style.display = 'none';
+    } else {
+        if (imgElement) imgElement.style.display = 'none';
+        if (iconElement) iconElement.style.display = 'block';
+    }
 
     const linkedinLink = document.querySelector('#liLinkedin a');
     const linkedInBase = 'https://www.linkedin.com/in/';
@@ -64,18 +90,14 @@ function renderUserInfo(user) {
         let username = user.linkedIn;
         try {
             const url = new URL(user.linkedIn);
-            if (url.hostname && url.hostname.includes('linkedin.com')) {
+            if (url.hostname.includes('linkedin.com')) {
                 username = url.pathname.replace(/^\/+|\/+$/g, '');
             }
-        } catch (e) {
-            username = user.linkedIn;
-        }
+        } catch (e) { username = user.linkedIn; }
 
-        const finalUrl = linkedInBase + username;
-        linkedinLink.href = finalUrl;
+        linkedinLink.href = linkedInBase + username;
         linkedinLink.textContent = "Perfil LinkedIn";
         linkedinLink.target = '_blank';
-        linkedinLink.rel = 'noopener noreferrer';
     } else {
         linkedinLink.textContent = "No disponible";
         linkedinLink.removeAttribute('href');
@@ -96,16 +118,22 @@ function renderUserInfo(user) {
 
     let promedioGeneral = user.estadisticas_evaluacion?.promedio_general || 0;
     if (promedioGeneral === 0 && user.estadisticas_evaluacion) {
-        const act = user.estadisticas_evaluacion.promedio_actitud || 0;
-        const apt = user.estadisticas_evaluacion.promedio_aptitud || 0;
-        promedioGeneral = (parseFloat(act) + parseFloat(apt)) / 2;
+        const act = parseFloat(user.estadisticas_evaluacion.promedio_actitud || 0);
+        const apt = parseFloat(user.estadisticas_evaluacion.promedio_aptitud || 0);
+        promedioGeneral = (act + apt) / 2;
     }
-    document.querySelector('.rating-number').textContent = parseFloat(promedioGeneral).toFixed(1);
-    document.querySelector('.rating-number').style.color = '#eebb00';
-    document.getElementById('ponderadoValue').textContent = parseFloat(promedioGeneral).toFixed(1);
+
+    const ratingNum = document.querySelector('.rating-number');
+    if (ratingNum) {
+        ratingNum.textContent = parseFloat(promedioGeneral).toFixed(1);
+        ratingNum.style.color = '#eebb00';
+    }
+
+    const ponderadoVal = document.getElementById('ponderadoValue');
+    if (ponderadoVal) ponderadoVal.textContent = parseFloat(promedioGeneral).toFixed(1);
 
     const btnCalificar = document.getElementById('btnCalificarUser');
-    btnCalificar.href = `../../views/user/encuestaUsuario.html?id=${user._id}`;
+    if (btnCalificar) btnCalificar.href = `../../views/user/encuestaUsuario.html?id=${user._id}`;
 }
 
 async function setupAdminButtons() {
@@ -136,23 +164,38 @@ async function setupAdminButtons() {
             hideAdminButtons();
             return;
         }
-            showAdminButtons();
-            configureAdminButtonListeners();
-            replaceCalificarWithEditar();
 
-            try {
-                const act = usuarioActual.estadisticas_evaluacion?.promedio_actitud || 0;
-                const apt = usuarioActual.estadisticas_evaluacion?.promedio_aptitud || 0;
-                const ratingEl = document.querySelector('.rating-number');
-                if (ratingEl) ratingEl.textContent = `Act: ${parseFloat(act).toFixed(1)} Apt: ${parseFloat(apt).toFixed(1)}`;
-                const ponderado = (parseFloat(act) + parseFloat(apt)) / 2 || 0;
-                const ponderEl = document.getElementById('ponderadoValue');
-                if (ponderEl) ponderEl.textContent = parseFloat(ponderado).toFixed(1);
-            } catch (e) {
-                console.error('Error mostrando ratings detallados para admin:', e);
+        showAdminButtons();
+        configureAdminButtonListeners();
+        replaceCalificarWithEditar();
+
+        try {
+            const act = usuarioActual.estadisticas_evaluacion?.promedio_actitud || 0;
+            const apt = usuarioActual.estadisticas_evaluacion?.promedio_aptitud || 0;
+            
+            const ratingBox = document.querySelector('.rating-box.admin-only');
+            const ratingNum = document.querySelector('.rating-number');
+
+            if (ratingBox) {
+                if (ratingNum) ratingNum.style.display = 'none';
+                ratingBox.style.display = 'flex';
+                
+                document.getElementById('ratingAptitud').textContent = parseFloat(apt).toFixed(1);
+                document.getElementById('ratingActitud').textContent = parseFloat(act).toFixed(1);
+            } else if (ratingNum) {
+                ratingNum.innerHTML = `<span style="font-size:1.4rem; display:block">Act: ${parseFloat(act).toFixed(1)}</span><span style="font-size:1.4rem">Apt: ${parseFloat(apt).toFixed(1)}</span>`;
             }
+
+            const ponderado = (parseFloat(act) + parseFloat(apt)) / 2 || 0;
+            const ponderEl = document.getElementById('ponderadoValue');
+            if (ponderEl) ponderEl.textContent = parseFloat(ponderado).toFixed(1);
+
+        } catch (e) {
+            console.error('Error mostrando ratings detallados:', e);
+        }
+
     } catch (error) {
-        console.error('Error verificando rol de administrador:', error);
+        console.error('Error verificando rol:', error);
         hideAdminButtons();
     }
 }
@@ -161,37 +204,34 @@ function replaceCalificarWithEditar() {
     const btnCalificar = document.getElementById('btnCalificarUser');
     if (!btnCalificar) return;
 
-    btnCalificar.textContent = 'Editar';
-    btnCalificar.removeAttribute('href');
-    btnCalificar.style.cursor = 'pointer';
-
     const newBtn = btnCalificar.cloneNode(true);
+    newBtn.textContent = 'Editar';
+    newBtn.removeAttribute('href');
+    newBtn.style.cursor = 'pointer';
+    newBtn.id = 'btnEditarAdmin';
+
     newBtn.addEventListener('click', (e) => {
         e.preventDefault();
         openAdminEditModal();
     });
+
     btnCalificar.parentNode.replaceChild(newBtn, btnCalificar);
 }
 
 function hideAdminButtons() {
     const adminFooter = document.querySelector('.admin-footer');
-    if (adminFooter) {
-        adminFooter.style.display = 'none';
-    }
+    if (adminFooter) adminFooter.style.display = 'none';
 }
 
 function showAdminButtons() {
     const adminFooter = document.querySelector('.admin-footer');
-    if (adminFooter) {
-        adminFooter.style.display = 'flex';
-    }
+    if (adminFooter) adminFooter.style.display = 'flex';
 }
 
 function configureAdminButtonListeners() {
     const btnDeshabilitar = document.getElementById('btnDeshabilitar');
     const btnHistorial = document.getElementById('btnHistorial');
     const btnVerCalificaciones = document.getElementById('btnVerCalificaciones');
-    const btnEditarInfo = document.getElementById('btnEditarInfo');
 
     const extractId = (ref) => {
         if (!ref) return null;
@@ -201,68 +241,60 @@ function configureAdminButtonListeners() {
         return null;
     };
 
-    const ESTADO_ACTIVO = '693cef998a9247fb779a70c1';
-    const ESTADO_INACTIVO = '693cef998a9247fb779a70c2';
+    const ESTADO_ACTIVO = estadosCache['Activo'] || '693cef998a9247fb779a70c1';
+    const ESTADO_INACTIVO = estadosCache['Inactivo'] || '693cef998a9247fb779a70c2';
 
     const updateToggleButton = () => {
         if (!btnDeshabilitar) return;
         const estadoId = extractId(usuarioActual?.id_estado) || '';
+        
         if (estadoId === ESTADO_INACTIVO) {
             btnDeshabilitar.textContent = 'Habilitar';
-            btnDeshabilitar.disabled = false;
+            btnDeshabilitar.style.backgroundColor = '#28a745';
+            btnDeshabilitar.style.color = 'white';
+            btnDeshabilitar.style.border = 'none';
         } else {
             btnDeshabilitar.textContent = 'Deshabilitar';
-            btnDeshabilitar.disabled = false;
+            btnDeshabilitar.style.backgroundColor = '';
+            btnDeshabilitar.style.color = '';
+            btnDeshabilitar.style.border = '';
         }
     };
 
     updateToggleButton();
 
-    btnDeshabilitar.addEventListener('click', async () => {
-        if (!usuarioActual) return;
+    if (btnDeshabilitar) {
+        btnDeshabilitar.addEventListener('click', async () => {
+            if (!usuarioActual) return;
 
-        const estadoId = extractId(usuarioActual.id_estado);
-        const isCurrentlyInactive = (estadoId === ESTADO_INACTIVO);
-        const targetEstado = isCurrentlyInactive ? ESTADO_ACTIVO : ESTADO_INACTIVO;
-        const actionText = isCurrentlyInactive ? 'habilitar' : 'deshabilitar';
+            const estadoId = extractId(usuarioActual.id_estado);
+            const isCurrentlyInactive = (estadoId === ESTADO_INACTIVO);
+            const targetEstado = isCurrentlyInactive ? ESTADO_ACTIVO : ESTADO_INACTIVO;
+            const actionText = isCurrentlyInactive ? 'habilitar' : 'deshabilitar';
 
-        const confirmAction = confirm(`¿Estás seguro de que deseas ${actionText} a ${usuarioActual.nombre}?`);
-        if (!confirmAction) return;
+            const confirmAction = confirm(`¿Estás seguro de que deseas ${actionText} a ${usuarioActual.nombre}?`);
+            if (!confirmAction) return;
 
-        try {
-            const resp = await fetch(`http://localhost:3000/usuarios/admin/${usuarioActual._id}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${data.token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id_estado: targetEstado })
-            });
+            try {
+                const resp = await fetch(`http://localhost:3000/usuarios/admin/${usuarioActual._id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${data.token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id_estado: targetEstado })
+                });
 
-            if (!resp.ok) {
-                let errMsg = `Error ${resp.status}`;
-                try {
-                    const errBody = await resp.json();
-                    errMsg = errBody.mensaje || errBody.message || errMsg;
-                } catch (e) { }
-                throw new Error(errMsg);
+                if (!resp.ok) throw new Error('Error al cambiar estado');
+
+                usuarioActual.id_estado = targetEstado;
+                updateToggleButton();
+                alert(`Usuario ${isCurrentlyInactive ? 'habilitado' : 'deshabilitado'} correctamente.`);
+            } catch (error) {
+                console.error(error);
+                alert('Error al cambiar el estado del usuario');
             }
-
-            try { await resp.json(); } catch (e) { }
-
-            usuarioActual.id_estado = targetEstado;
-            updateToggleButton();
-
-            alert(`Usuario ${isCurrentlyInactive ? 'habilitado' : 'deshabilitado'} correctamente.`);
-        } catch (error) {
-            console.error(error);
-            alert('Error al cambiar el estado del usuario: ' + (error.message || error));
-        }
-    });
-
-
-    if (btnEditarInfo) {
-        btnEditarInfo.addEventListener('click', () => openAdminEditModal());
+        });
     }
 
     const closeModalBtn = document.getElementById('closeModal');
@@ -274,31 +306,70 @@ function configureAdminButtonListeners() {
     const editForm = document.getElementById('editForm');
     if (editForm) editForm.addEventListener('submit', saveAdminEditForm);
 
-    btnHistorial.addEventListener('click', () => {
-        window.location.href = `../admin/historialCiclos.html?id=${usuarioActual._id}`;
-    });
+    if (btnHistorial) {
+        btnHistorial.addEventListener('click', () => {
+            window.location.href = `../admin/historialCiclos.html?id=${usuarioActual._id}`;
+        });
+    }
 
-    btnVerCalificaciones.addEventListener('click', () => {
-        window.location.href = `../admin/historialRespuestas.html?id=${usuarioActual._id}`;
-    });
+    if (btnVerCalificaciones) {
+        btnVerCalificaciones.addEventListener('click', () => {
+            window.location.href = `../admin/historialRespuestas.html?id=${usuarioActual._id}`;
+        });
+    }
+
+    const fotoInput = document.getElementById('foto');
+    if (fotoInput) {
+        fotoInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    const preview = document.getElementById('previewFoto');
+                    const icon = document.getElementById('iconCamera');
+                    if (preview) {
+                        preview.src = evt.target.result;
+                        preview.style.display = 'block';
+                    }
+                    if (icon) icon.style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 }
 
 function openAdminEditModal() {
     const modal = document.getElementById('editModal');
     if (!modal || !usuarioActual) return;
-    const sobreMiInput = document.getElementById('sobreMi');
-    const linkedInInput = document.getElementById('linkedIn');
-    const emailInput = document.getElementById('email');
-    const telefonoInput = document.getElementById('telefono');
-    const nombreInput = document.getElementById('nombre');
-    const apellidoInput = document.getElementById('apellido');
 
-    if (sobreMiInput) sobreMiInput.value = usuarioActual.sobremi || '';
-    if (linkedInInput) linkedInInput.value = usuarioActual.linkedIn || '';
-    if (emailInput) emailInput.value = usuarioActual.email || '';
-    if (telefonoInput) telefonoInput.value = usuarioActual.telefono || '';
-    if (nombreInput) nombreInput.value = usuarioActual.nombre || '';
-    if (apellidoInput) apellidoInput.value = usuarioActual.apellido || '';
+    const inputs = {
+        'nombre': usuarioActual.nombre,
+        'apellido': usuarioActual.apellido,
+        'email': usuarioActual.email,
+        'telefono': usuarioActual.telefono,
+        'linkedIn': usuarioActual.linkedIn,
+        'sobreMi': usuarioActual.sobremi
+    };
+
+    for (const [id, val] of Object.entries(inputs)) {
+        const el = document.getElementById(id);
+        if (el) el.value = val || '';
+    }
+
+    const preview = document.getElementById('previewFoto');
+    const icon = document.getElementById('iconCamera');
+    if (usuarioActual.foto) {
+        const src = usuarioActual.foto.startsWith('http') ? usuarioActual.foto : `http://localhost:3000/${usuarioActual.foto}`;
+        if (preview) {
+            preview.src = src;
+            preview.style.display = 'block';
+        }
+        if (icon) icon.style.display = 'none';
+    } else {
+        if (preview) preview.style.display = 'none';
+        if (icon) icon.style.display = 'block';
+    }
 
     modal.classList.add('show');
 }
@@ -312,49 +383,32 @@ async function saveAdminEditForm(e) {
     if (e && e.preventDefault) e.preventDefault();
     if (!usuarioActual) return;
 
-    const sobreMiInput = document.getElementById('sobreMi');
-    const linkedInInput = document.getElementById('linkedIn');
-    const telefonoInput = document.getElementById('telefono');
-    const nombreInput = document.getElementById('nombre');
-    const apellidoInput = document.getElementById('apellido');
-    const emailInput = document.getElementById('email');
-
-    const updateData = {
-        nombre: nombreInput ? nombreInput.value : '',
-        apellido: apellidoInput ? apellidoInput.value : '',
-        email: emailInput ? emailInput.value : '',
-        sobremi: sobreMiInput ? sobreMiInput.value : '',
-        linkedIn: linkedInInput ? linkedInInput.value : '',
-        telefono: telefonoInput ? telefonoInput.value : ''
-    };
+    const form = document.getElementById('editForm');
+    const formData = new FormData(form);
 
     try {
         const resp = await fetch(`http://localhost:3000/usuarios/admin/${usuarioActual._id}`, {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${data.token}`,
-                'Content-Type': 'application/json'
+                'Authorization': `Bearer ${data.token}`
             },
-            body: JSON.stringify(updateData)
+            body: formData
         });
 
         if (!resp.ok) {
-            let errMsg = `Error ${resp.status}`;
-            try {
-                const errBody = await resp.json();
-                errMsg = errBody.mensaje || errBody.message || errMsg;
-            } catch (e) { }
-            throw new Error(errMsg);
+            const err = await resp.json();
+            throw new Error(err.mensaje || err.message || 'Error al actualizar');
         }
 
-        try { await resp.json(); } catch (e) { }
+        const updatedData = await resp.json();
+        usuarioActual = { ...usuarioActual, ...updatedData };
 
-        usuarioActual = { ...usuarioActual, ...updateData };
         renderUserInfo(usuarioActual);
         closeAdminEditModal();
         alert('Información actualizada correctamente.');
+
     } catch (error) {
         console.error('Error al guardar datos:', error);
-        alert('Error al guardar los datos: ' + (error.message || error));
+        alert('Error al guardar los datos: ' + error.message);
     }
 }

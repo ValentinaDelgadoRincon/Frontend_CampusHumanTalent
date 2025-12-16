@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas por Áreas</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/admin/estadisticas.css">
+</head>
+
+<body>
+
+    <div class="main-container">
+        
+        <header class="header-section">
+            <div class="header-left">
+                <a href="./inicioAdmin.html" class="back-arrow fas fa-share"></a>
+            </div>
+            
+            <div class="header-center">
+                <h1 class="page-title">Estadísticas Promedio por Áreas</h1>
+            </div>
+
+            <div class="header-right">
+                <img src="../../multimedia/logoLogin.png" alt="CampusLands" class="logo-img">
+            </div>
+        </header>
+
+        <div id="statsGrid" class="stats-grid">
+            <p class="loading-text">Calculando estadísticas...</p>
+        </div>
+
+    </div>
+
+    <script src="../../js/api/Areas_TrabajoAPI.js"></script>
+    <script src="../../js/api/UsuariosAPI.js"></script>
+    <script src="../../js/admin/estadisticas.js"></script>
+</body>
+</html>

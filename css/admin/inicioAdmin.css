@@ -4,6 +4,8 @@
     --bg-gray: #d9d9d9;
     --white: #ffffff;
     --text-color: #000000;
+    --trash-red: #ff6b6b;
+    --trash-hover: #ff4d4d;
 }
 
 * {
@@ -120,6 +122,23 @@ body {
     text-align: center;
 }
 
+.btn-stats {
+    margin-top: 20px;
+    background-color: var(--white);
+    color: var(--dark-blue);
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}
+
+.btn-stats:hover {
+    background-color: #f0f0f0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .management-grid {
     flex: 1;
     display: grid;
@@ -153,14 +172,16 @@ body {
     margin-bottom: 20px;
 }
 
-.fa-user-plus {
-    color: var(--dark-blue);
-}
-
 .card-menu p {
     color: #555;
     font-size: 1.1rem;
     font-weight: 500;
+}
+
+@media (max-width: 1200px) {
+    .management-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 992px) {
@@ -172,15 +193,11 @@ body {
         width: 100%;
         flex-direction: row;
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .btn-cycle {
         width: 200px;
-    }
-
-    .management-grid {
-        width: 100%;
-        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -217,7 +234,7 @@ body {
     background-color: white;
     padding: 30px;
     border-radius: 20px;
-    border: 2px solid #00265a;
+    border: 2px solid var(--dark-blue);
     width: 90%;
     max-width: 450px;
     text-align: center;
@@ -245,7 +262,7 @@ body {
 }
 
 .modal-input:focus {
-    border-color: #00265a;
+    border-color: var(--dark-blue);
 }
 
 .select-wrapper {
@@ -284,7 +301,7 @@ body {
 }
 
 .btn-confirm {
-    background-color: #00265a;
+    background-color: var(--dark-blue);
     color: white;
     border: none;
 }
@@ -295,8 +312,8 @@ body {
 
 .btn-cancel {
     background-color: white;
-    border: 2px solid #ff6b6b;
-    color: #ff6b6b;
+    border: 2px solid var(--trash-red);
+    color: var(--trash-red);
 }
 
 .btn-cancel:hover {
@@ -333,8 +350,23 @@ body {
     text-overflow: ellipsis;
 }
 
+.encuesta-input-editable {
+    flex: 1;
+    border: 2px solid var(--dark-blue);
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    outline: none;
+    color: #333;
+    background-color: white;
+}
+
+.encuesta-input-editable:focus {
+    box-shadow: 0 0 5px rgba(0, 38, 90, 0.3);
+}
+
 .btn-edit-small {
-    background-color: #00265a;
+    background-color: var(--dark-blue);
     color: white;
     padding: 10px 25px;
     border-radius: 8px;
@@ -351,7 +383,7 @@ body {
 }
 
 .trash-icon {
-    background-color: #ff6b6b;
+    background-color: var(--trash-red);
     color: white;
     font-size: 1.2rem;
     cursor: pointer;
@@ -366,30 +398,15 @@ body {
 }
 
 .trash-icon:hover {
-    background-color: #ff4d4d;
+    background-color: var(--trash-hover);
     transform: scale(1.05);
-}
-
-.encuesta-input-editable {
-    flex: 1;
-    border: 2px solid #00265a;
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-size: 1rem;
-    outline: none;
-    color: #333;
-    background-color: white;
-}
-
-.encuesta-input-editable:focus {
-    box-shadow: 0 0 5px rgba(0, 38, 90, 0.3);
 }
 
 .btn-circle-plus {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    background-color: #00265a;
+    background-color: var(--dark-blue);
     color: white;
     border: none;
     font-size: 1.5rem;
@@ -413,4 +430,23 @@ body {
 .encuestas-list::-webkit-scrollbar-thumb {
     background-color: #ccc;
     border-radius: 4px;
+}
+
+.sidebar-card {
+    margin-top: 40px;
+    width: 100%;
+    height: 200px;
+    padding: 20px;
+}
+
+.sidebar-card .icon-circle {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 992px) {
+    .sidebar-card {
+        width: 250px;
+        margin-top: 20px;
+    }
 }

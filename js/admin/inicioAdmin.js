@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!isAdmin) {
         alert('Acceso no autorizado');
-        window.location.href = '../user/inicioUsuario.html';
+        window.location.href = '../../index.html';
         return;
     }
 

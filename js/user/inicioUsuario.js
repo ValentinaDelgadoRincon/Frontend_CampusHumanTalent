@@ -63,18 +63,8 @@ function renderUsers(users) {
             ? (parseFloat(promedioActitud) + parseFloat(promedioAptitud)) / 2 
             : 0;
 
-        let scoreHTML = '';
-        if (isAdmin) {
-            scoreHTML = `
-                <div class="score-badge admin-badges">
-                    <div class="badge-act">Act: ${promedioActitud.toFixed(1)}</div>
-                    <div class="badge-apt">Apt: ${promedioAptitud.toFixed(1)}</div>
-                </div>
-            `;
-        } else {
-            scoreHTML = `<div class="score-badge">${promedioGeneral.toFixed(1)}</div>`;
-        }
-
+        let scoreHTML = `<div class="score-badge">${promedioGeneral.toFixed(1)}</div>`;
+        
         const cardHTML = `
             <div class="user-card" data-user-id="${user._id}" data-area-id="${user.id_area_trabajo}" ${isSameArea ? 'data-same-area="true"' : ''}>
                 ${requiredMark}
