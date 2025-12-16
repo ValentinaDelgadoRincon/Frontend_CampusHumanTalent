@@ -12,6 +12,11 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 20px;
+    background-image:
+    linear-gradient(to right, #cccccc36 1px, transparent 1px),
+    linear-gradient(to bottom, #cccccc52 1px, transparent 1px); 
+background-size: 20px 20px;
+background-repeat: repeat; 
 }
 
 .main-container {
