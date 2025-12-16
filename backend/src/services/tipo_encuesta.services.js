@@ -55,7 +55,7 @@ export async function editarTipoEncuesta(id, datos) {
             throw new Error("Tipo de encuesta no encontrado");
         }
         
-        Object.assign(tipoEncuesta, datos);
+        Object.assign(tipoEncuesta, datos);  // ✅ Más confiable
         
         return await tipoEncuesta.save();
     } catch (error) {

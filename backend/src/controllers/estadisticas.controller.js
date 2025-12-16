@@ -134,3 +134,26 @@ export async function recalcularTodasEstadisticas(req, res) {
         });
     }
 }
+
+export async function obtenerPromediosPorArea(req, res) {
+    try {
+        const filtros = {};
+
+        if (req.query.id_estado) {
+            filtros.id_estado = req.query.id_estado;
+        }
+
+        const promedios = await estadisticasService.obtenerPromediosPorArea(filtros);
+
+        res.status(200).json({
+            success: true,
+            data: promedios,
+            total_areas: promedios.length
+        });
+    } catch (error) {
+        res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+}

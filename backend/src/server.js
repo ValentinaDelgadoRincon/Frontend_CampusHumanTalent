@@ -19,6 +19,7 @@ import usuariosRoutes from './routers/usuarios.routes.js';
 import ciclosEvaluacion from './routers/ciclos.routes.js';
 import roles from './routers/roles.routes.js';
 import estadisticasRoutes from './routers/estadisticas.routes.js';
+import estadosRoutes from './routers/estados.routes.js';
 
 const app = express();
 app.use(express.json());
@@ -61,6 +62,7 @@ app.use('/usuarios', usuariosRoutes);
 app.use('/ciclos-evaluacion', ciclosEvaluacion);
 app.use('/roles', roles);
 app.use('/estadisticas', estadisticasRoutes);
+app.use('/estados', estadosRoutes);
 
 app.use(rateLimit({
     windowMs: 15 * 60 * 1000,

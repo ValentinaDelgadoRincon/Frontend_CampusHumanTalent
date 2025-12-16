@@ -21,8 +21,8 @@ export async function getPreguntaPorId(req, res) {
 
 export async function postCrearPregunta(req, res) {
     try {
-        const { pregunta, id_tipo_pregunta, id_tipo_respuesta } = req.body;
-        const nuevaPregunta = await crearPregunta(pregunta, id_tipo_pregunta, id_tipo_respuesta);
+        const { texto, id_tipo_pregunta, id_tipo_respuesta } = req.body;
+        const nuevaPregunta = await crearPregunta(texto, id_tipo_pregunta, id_tipo_respuesta);
         res.status(201).json(nuevaPregunta);
     } catch (error) {
         res.status(500).json({ mensaje: error.message });

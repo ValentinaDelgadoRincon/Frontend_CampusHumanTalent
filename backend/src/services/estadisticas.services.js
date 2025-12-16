@@ -1,28 +1,32 @@
 import { Usuario, RespuestaEncuesta, CicloEvaluacion } from "../validationSchemas.js";
 import mongoose from 'mongoose';
 
-/**
- * Calcula y actualiza las estadísticas de evaluación de un usuario
- * @param {string} id_usuario - ID del usuario a actualizar
- * @returns {Object} Estadísticas actualizadas
- */
+
 export async function calcularYActualizarEstadisticas(id_usuario) {
     try {
-        // Verificar que el usuario existe
+
         const usuario = await Usuario.findById(id_usuario);
         if (!usuario) {
             throw new Error("Usuario no encontrado");
         }
 
-        // Obtener todas las evaluaciones donde el usuario fue evaluado
+
         const evaluaciones = await RespuestaEncuesta.find({ 
             id_usuario_evaluado: id_usuario 
-        }).populate('id_ciclo');
+        })
+        .populate('id_ciclo')
+        .populate({
+            path: 'respuestas.id_pregunta',
+            populate: {
+                path: 'id_tipo_pregunta'
+            }
+        });
 
         if (evaluaciones.length === 0) {
-            // Si no tiene evaluaciones, resetear estadísticas
+
             usuario.estadisticas_evaluacion = {
-                promedio_general: 0,
+                promedio_actitud: 0,
+                promedio_aptitud: 0,
                 total_evaluaciones: 0,
                 ultimo_calculo: new Date(),
                 evaluaciones_por_ciclo: []
@@ -31,7 +35,6 @@ export async function calcularYActualizarEstadisticas(id_usuario) {
             return usuario.estadisticas_evaluacion;
         }
 
-        // Agrupar evaluaciones por ciclo
         const evaluacionesPorCiclo = {};
         evaluaciones.forEach(ev => {
             const cicloId = ev.id_ciclo._id.toString();
@@ -45,43 +48,81 @@ export async function calcularYActualizarEstadisticas(id_usuario) {
             evaluacionesPorCiclo[cicloId].evaluaciones.push(ev);
         });
 
-        // Calcular promedio por ciclo
         const evaluacionesPorCicloArray = [];
-        let sumaPromediosCiclos = 0;
+        let sumaActitudCiclos = 0;
+        let sumaAptitudCiclos = 0;
         let totalCiclos = 0;
 
         for (const cicloId in evaluacionesPorCiclo) {
             const cicloData = evaluacionesPorCiclo[cicloId];
             const evaluacionesCiclo = cicloData.evaluaciones;
 
-            // Calcular promedio del ciclo (promedio de todos los promedios normalizados)
-            const sumaPromedios = evaluacionesCiclo.reduce((sum, ev) => {
-                return sum + (ev.promedio_normalizado || 0);
-            }, 0);
 
-            const promedioCiclo = evaluacionesCiclo.length > 0 
-                ? Math.round(sumaPromedios / evaluacionesCiclo.length) 
+            let totalActitud = 0;
+            let countActitud = 0;
+            let maxActitud = 0;
+            
+            let totalAptitud = 0;
+            let countAptitud = 0;
+            let maxAptitud = 0;
+
+            evaluacionesCiclo.forEach(evaluacion => {
+                evaluacion.respuestas.forEach(respuesta => {
+                    if (respuesta.id_pregunta && respuesta.id_pregunta.id_tipo_pregunta) {
+                        const tipoPregunta = respuesta.id_pregunta.id_tipo_pregunta.nombre;
+                        const valorNumerico = respuesta.valor_numerico || 0;
+                        
+                        const tipoRespuesta = respuesta.id_pregunta.id_tipo_respuesta?.nombre;
+                        let maxPosible = 1; 
+                        if (tipoRespuesta === 'Escala de Likert') {
+                            maxPosible = 5;
+                        }
+
+                        if (tipoPregunta === 'Actitud') {
+                            totalActitud += valorNumerico;
+                            maxActitud += maxPosible;
+                            countActitud++;
+                        } else if (tipoPregunta === 'Aptitud') {
+                            totalAptitud += valorNumerico;
+                            maxAptitud += maxPosible;
+                            countAptitud++;
+                        }
+                    }
+                });
+            });
+
+            const promedioActitudCiclo = maxActitud > 0 
+                ? Math.round((totalActitud / maxActitud) * 100) / 10 
+                : 0;
+
+            const promedioAptitudCiclo = maxAptitud > 0 
+                ? Math.round((totalAptitud / maxAptitud) * 100) / 10 
                 : 0;
 
             evaluacionesPorCicloArray.push({
                 id_ciclo: cicloData.id_ciclo,
-                promedio_ciclo: promedioCiclo,
+                promedio_actitud_ciclo: promedioActitudCiclo,
+                promedio_aptitud_ciclo: promedioAptitudCiclo,
                 total_respuestas: evaluacionesCiclo.length,
                 fecha_calculo: new Date()
             });
 
-            sumaPromediosCiclos += promedioCiclo;
+            sumaActitudCiclos += promedioActitudCiclo;
+            sumaAptitudCiclos += promedioAptitudCiclo;
             totalCiclos++;
         }
 
-        // Calcular promedio general (promedio de todos los ciclos)
-        const promedioGeneral = totalCiclos > 0 
-            ? Math.round(sumaPromediosCiclos / totalCiclos) 
+        const promedioActitudGeneral = totalCiclos > 0 
+            ? Math.round(sumaActitudCiclos / totalCiclos) 
             : 0;
 
-        // Actualizar estadísticas del usuario
+        const promedioAptitudGeneral = totalCiclos > 0 
+            ? Math.round(sumaAptitudCiclos / totalCiclos) 
+            : 0;
+
         usuario.estadisticas_evaluacion = {
-            promedio_general: promedioGeneral,
+            promedio_actitud: promedioActitudGeneral,
+            promedio_aptitud: promedioAptitudGeneral,
             total_evaluaciones: evaluaciones.length,
             ultimo_calculo: new Date(),
             evaluaciones_por_ciclo: evaluacionesPorCicloArray
@@ -95,12 +136,6 @@ export async function calcularYActualizarEstadisticas(id_usuario) {
     }
 }
 
-/**
- * Obtiene las estadísticas de evaluación de un usuario
- * @param {string} id_usuario - ID del usuario
- * @param {boolean} recalcular - Si debe recalcular las estadísticas
- * @returns {Object} Estadísticas del usuario
- */
 export async function obtenerEstadisticasUsuario(id_usuario, recalcular = false) {
     try {
         const usuario = await Usuario.findById(id_usuario)
@@ -113,10 +148,9 @@ export async function obtenerEstadisticasUsuario(id_usuario, recalcular = false)
             throw new Error("Usuario no encontrado");
         }
 
-        // Si se solicita recalcular o no tiene estadísticas
         if (recalcular || !usuario.estadisticas_evaluacion.ultimo_calculo) {
             await calcularYActualizarEstadisticas(id_usuario);
-            // Volver a obtener el usuario actualizado
+
             return await Usuario.findById(id_usuario)
                 .populate({
                     path: 'estadisticas_evaluacion.evaluaciones_por_ciclo.id_ciclo',
@@ -130,27 +164,21 @@ export async function obtenerEstadisticasUsuario(id_usuario, recalcular = false)
     }
 }
 
-/**
- * Obtiene estadísticas detalladas de un usuario en un ciclo específico
- * @param {string} id_usuario - ID del usuario
- * @param {string} id_ciclo - ID del ciclo
- * @returns {Object} Estadísticas detalladas del ciclo
- */
 export async function obtenerEstadisticasPorCiclo(id_usuario, id_ciclo) {
     try {
-        // Verificar que el usuario existe
+
         const usuario = await Usuario.findById(id_usuario);
         if (!usuario) {
             throw new Error("Usuario no encontrado");
         }
 
-        // Verificar que el ciclo existe
+
         const ciclo = await CicloEvaluacion.findById(id_ciclo);
         if (!ciclo) {
             throw new Error("Ciclo no encontrado");
         }
 
-        // Obtener todas las evaluaciones del usuario en ese ciclo
+
         const evaluaciones = await RespuestaEncuesta.find({
             id_usuario_evaluado: id_usuario,
             id_ciclo: id_ciclo
@@ -174,18 +202,12 @@ export async function obtenerEstadisticasPorCiclo(id_usuario, id_ciclo) {
                     estado: ciclo.estado
                 },
                 total_evaluaciones: 0,
-                promedio_ciclo: 0,
+                promedio_actitud: 0,
+                promedio_aptitud: 0,
                 evaluaciones: []
             };
         }
 
-        // Calcular promedio del ciclo
-        const sumaPromedios = evaluaciones.reduce((sum, ev) => {
-            return sum + (ev.promedio_normalizado || 0);
-        }, 0);
-        const promedioCiclo = Math.round(sumaPromedios / evaluaciones.length);
-
-        // Agrupar respuestas por tipo de pregunta para análisis
         const estadisticasPorTipo = {};
         evaluaciones.forEach(evaluacion => {
             evaluacion.respuestas.forEach(respuesta => {
@@ -201,7 +223,6 @@ export async function obtenerEstadisticasPorCiclo(id_usuario, id_ciclo) {
                     estadisticasPorTipo[tipoPregunta].suma += respuesta.valor_numerico || 0;
                     estadisticasPorTipo[tipoPregunta].cantidad++;
                     
-                    // Calcular máximo posible según el tipo de respuesta
                     const tipoRespuesta = respuesta.id_pregunta.id_tipo_respuesta?.nombre;
                     if (tipoRespuesta === 'Si o No') {
                         estadisticasPorTipo[tipoPregunta].maximo_posible += 1;
@@ -212,17 +233,24 @@ export async function obtenerEstadisticasPorCiclo(id_usuario, id_ciclo) {
             });
         });
 
-        // Calcular promedios por tipo
-        const promediosPorTipo = {};
-        for (const tipo in estadisticasPorTipo) {
-            const data = estadisticasPorTipo[tipo];
-            promediosPorTipo[tipo] = {
-                promedio_normalizado: data.maximo_posible > 0 
-                    ? Math.round((data.suma / data.maximo_posible) * 100)
-                    : 0,
-                total_preguntas: data.cantidad
-            };
-        }
+        const promedioActitud = estadisticasPorTipo['Actitud'] 
+            ? Math.round((estadisticasPorTipo['Actitud'].suma / estadisticasPorTipo['Actitud'].maximo_posible) * 100) / 10
+            : 0;
+
+        const promedioAptitud = estadisticasPorTipo['Aptitud'] 
+            ? Math.round((estadisticasPorTipo['Aptitud'].suma / estadisticasPorTipo['Aptitud'].maximo_posible) * 100) / 10
+            : 0;
+
+        const promediosPorTipo = {
+            Actitud: {
+                promedio_normalizado: promedioActitud,
+                total_preguntas: estadisticasPorTipo['Actitud']?.cantidad || 0
+            },
+            Aptitud: {
+                promedio_normalizado: promedioAptitud,
+                total_preguntas: estadisticasPorTipo['Aptitud']?.cantidad || 0
+            }
+        };
 
         return {
             id_usuario,
@@ -235,7 +263,8 @@ export async function obtenerEstadisticasPorCiclo(id_usuario, id_ciclo) {
                 fecha_fin: ciclo.fecha_fin
             },
             total_evaluaciones: evaluaciones.length,
-            promedio_ciclo: promedioCiclo,
+            promedio_actitud: promedioActitud,
+            promedio_aptitud: promedioAptitud,
             estadisticas_por_tipo: promediosPorTipo,
             evaluaciones: evaluaciones.map(ev => ({
                 id: ev._id,
@@ -259,12 +288,6 @@ export async function obtenerEstadisticasPorCiclo(id_usuario, id_ciclo) {
     }
 }
 
-/**
- * Obtiene un ranking de usuarios por promedio general
- * @param {Object} filtros - Filtros opcionales (área, cargo, etc.)
- * @param {number} limite - Número máximo de resultados
- * @returns {Array} Ranking de usuarios
- */
 export async function obtenerRankingUsuarios(filtros = {}, limite = 10) {
     try {
         const query = { id_estado: filtros.id_estado };
@@ -277,11 +300,15 @@ export async function obtenerRankingUsuarios(filtros = {}, limite = 10) {
             query.id_cargo = filtros.id_cargo;
         }
 
+        const tipoOrden = filtros.tipo === 'aptitud' 
+            ? 'estadisticas_evaluacion.promedio_aptitud' 
+            : 'estadisticas_evaluacion.promedio_actitud';
+
         const usuarios = await Usuario.find(query)
             .select('nombre apellido email estadisticas_evaluacion id_area_trabajo id_cargo')
             .populate('id_area_trabajo', 'nombre')
             .populate('id_cargo', 'nombre')
-            .sort({ 'estadisticas_evaluacion.promedio_general': -1 })
+            .sort({ [tipoOrden]: -1 })
             .limit(limite);
 
         return usuarios.map((usuario, index) => ({
@@ -291,7 +318,8 @@ export async function obtenerRankingUsuarios(filtros = {}, limite = 10) {
             email: usuario.email,
             area: usuario.id_area_trabajo?.nombre,
             cargo: usuario.id_cargo?.nombre,
-            promedio_general: usuario.estadisticas_evaluacion?.promedio_general || 0,
+            promedio_actitud: usuario.estadisticas_evaluacion?.promedio_actitud || 0,
+            promedio_aptitud: usuario.estadisticas_evaluacion?.promedio_aptitud || 0,
             total_evaluaciones: usuario.estadisticas_evaluacion?.total_evaluaciones || 0,
             ultimo_calculo: usuario.estadisticas_evaluacion?.ultimo_calculo
         }));
@@ -300,10 +328,6 @@ export async function obtenerRankingUsuarios(filtros = {}, limite = 10) {
     }
 }
 
-/**
- * Recalcula las estadísticas de todos los usuarios
- * @returns {Object} Resumen de la actualización
- */
 export async function recalcularTodasLasEstadisticas() {
     try {
         const usuarios = await Usuario.find();
@@ -328,5 +352,72 @@ export async function recalcularTodasLasEstadisticas() {
         };
     } catch (error) {
         throw new Error("Error al recalcular todas las estadísticas: " + error.message);
+    }
+}
+
+export async function obtenerPromediosPorArea(filtros = {}) {
+    try {
+        const query = {};
+
+        if (filtros.id_estado) {
+            query.id_estado = filtros.id_estado;
+        }
+
+        const usuarios = await Usuario.find(query)
+            .select('nombre apellido id_area_trabajo estadisticas_evaluacion')
+            .populate('id_area_trabajo', 'nombre');
+
+        const areaMap = {};
+        
+        usuarios.forEach(usuario => {
+            if (!usuario.id_area_trabajo) return;
+
+            const areaId = usuario.id_area_trabajo._id.toString();
+            const areaNombre = usuario.id_area_trabajo.nombre;
+
+            if (!areaMap[areaId]) {
+                areaMap[areaId] = {
+                    id_area: usuario.id_area_trabajo._id,
+                    nombre_area: areaNombre,
+                    suma_actitud: 0,
+                    suma_aptitud: 0,
+                    total_usuarios: 0,
+                    usuarios_con_evaluaciones: 0
+                };
+            }
+
+            if (usuario.estadisticas_evaluacion?.total_evaluaciones > 0) {
+                areaMap[areaId].suma_actitud += usuario.estadisticas_evaluacion.promedio_actitud || 0;
+                areaMap[areaId].suma_aptitud += usuario.estadisticas_evaluacion.promedio_aptitud || 0;
+                areaMap[areaId].usuarios_con_evaluaciones++;
+            }
+            
+            areaMap[areaId].total_usuarios++;
+        });
+
+        const promediosPorArea = Object.values(areaMap).map(area => {
+            const promedioActitud = area.usuarios_con_evaluaciones > 0
+                ? (area.suma_actitud / area.usuarios_con_evaluaciones).toFixed(1)
+                : 0;
+
+            const promedioAptitud = area.usuarios_con_evaluaciones > 0
+                ? (area.suma_aptitud / area.usuarios_con_evaluaciones).toFixed(1)
+                : 0;
+
+            return {
+                id_area: area.id_area,
+                nombre_area: area.nombre_area,
+                promedio_actitud: parseFloat(promedioActitud),
+                promedio_aptitud: parseFloat(promedioAptitud),
+                total_usuarios: area.total_usuarios,
+                usuarios_evaluados: area.usuarios_con_evaluaciones
+            };
+        });
+
+        promediosPorArea.sort((a, b) => a.nombre_area.localeCompare(b.nombre_area));
+
+        return promediosPorArea;
+    } catch (error) {
+        throw new Error("Error al obtener promedios por área: " + error.message);
     }
 }

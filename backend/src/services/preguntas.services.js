@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 export async function obtenerPreguntas() {
     try {
-        return await Pregunta.find().sort({ pregunta: 1 });
+        return await Pregunta.find().sort({ texto: 1 });
     } catch (error) {
         throw new Error("Error al obtener las preguntas: " + error.message);
     }
@@ -21,13 +21,13 @@ export async function obtenerPreguntaPorId(id) {
     }
 }
 
-export async function crearPregunta(pregunta, id_tipo_pregunta, id_tipo_respuesta) {
+export async function crearPregunta(texto, id_tipo_pregunta, id_tipo_respuesta) {
     try {
-        if (!pregunta || pregunta.trim() === '') {
+        if (!texto || texto.trim() === '') {
             throw new Error("El texto de la pregunta es obligatorio");
         }
 
-        const preguntaExistente = await Pregunta.findOne({ pregunta: pregunta });
+        const preguntaExistente = await Pregunta.findOne({ texto: texto });
 
         if (preguntaExistente) {
             throw new Error("La pregunta ya existe");
@@ -43,7 +43,7 @@ export async function crearPregunta(pregunta, id_tipo_pregunta, id_tipo_respuest
             throw new Error("El tipo de respuesta no existe");
         }
 
-        const nuevaPregunta = new Pregunta({ pregunta: pregunta, id_tipo_pregunta: id_tipo_pregunta, id_tipo_respuesta: id_tipo_respuesta });
+        const nuevaPregunta = new Pregunta({ texto: texto, id_tipo_pregunta: id_tipo_pregunta, id_tipo_respuesta: id_tipo_respuesta });
         return await nuevaPregunta.save();
     } catch (error) {
         throw new Error("Error al crear la pregunta: " + error.message);

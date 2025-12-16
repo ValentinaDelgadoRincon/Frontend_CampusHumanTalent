@@ -21,6 +21,7 @@ async function loadUserData() {
         }, {});
 
         fillUserInfo(currentUser);
+        adjustRatingsForRole(currentUser);
     } catch (error) {
         console.error('Error al cargar datos del usuario:', error);
     }
@@ -37,6 +38,12 @@ function fillUserInfo(user) {
     let ratingValue = user.estadisticas_evaluacion?.promedio_general || 
                       user.estadisticas?.promedio || 
                       0;
+    
+    if (ratingValue === 0 && user.estadisticas_evaluacion) {
+        const act = user.estadisticas_evaluacion.promedio_actitud || 0;
+        const apt = user.estadisticas_evaluacion.promedio_aptitud || 0;
+        ratingValue = (parseFloat(act) + parseFloat(apt)) / 2;
+    }
     
     ratingValue = parseFloat(ratingValue).toFixed(1);
     ratingElement.textContent = ratingValue;
@@ -85,6 +92,34 @@ function fillUserInfo(user) {
     phoneLi.dataset.field = 'telefono';
     phoneLi.dataset.value = user.telefono || '';
     contactList.appendChild(phoneLi);
+}
+
+async function adjustRatingsForRole(user) {
+    try {
+        const dataLocal = JSON.parse(localStorage.getItem('data'));
+        if (!dataLocal || !dataLocal.usuario || !dataLocal.usuario.id_rol) return;
+
+        const roleId = dataLocal.usuario.id_rol;
+        const resp = await fetch(`http://localhost:3000/roles/${roleId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${dataLocal.token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!resp.ok) return;
+        const role = await resp.json();
+        const nombreRol = (role.nombre || '').toLowerCase();
+        if (!nombreRol.includes('administrador')) return;
+
+        const ratingElement = document.querySelector('.rating');
+        const act = user.estadisticas_evaluacion?.promedio_actitud || 0;
+        const apt = user.estadisticas_evaluacion?.promedio_aptitud || 0;
+        if (ratingElement) ratingElement.textContent = `Act: ${parseFloat(act).toFixed(1)} Apt: ${parseFloat(apt).toFixed(1)}`;
+    } catch (error) {
+        console.error('Error ajustando ratings por rol:', error);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -94,11 +94,15 @@ function renderUserInfo(user) {
         phoneLink.removeAttribute('href');
     }
 
-    const promedio = user.estadisticas_evaluacion?.promedio_general || 0;
-    document.querySelector('.rating-number').textContent = parseFloat(promedio).toFixed(1);
+    let promedioGeneral = user.estadisticas_evaluacion?.promedio_general || 0;
+    if (promedioGeneral === 0 && user.estadisticas_evaluacion) {
+        const act = user.estadisticas_evaluacion.promedio_actitud || 0;
+        const apt = user.estadisticas_evaluacion.promedio_aptitud || 0;
+        promedioGeneral = (parseFloat(act) + parseFloat(apt)) / 2;
+    }
+    document.querySelector('.rating-number').textContent = parseFloat(promedioGeneral).toFixed(1);
     document.querySelector('.rating-number').style.color = '#eebb00';
-
-    document.getElementById('ponderadoValue').textContent = parseFloat(promedio).toFixed(1);
+    document.getElementById('ponderadoValue').textContent = parseFloat(promedioGeneral).toFixed(1);
 
     const btnCalificar = document.getElementById('btnCalificarUser');
     btnCalificar.href = `../../views/user/encuestaUsuario.html?id=${user._id}`;
@@ -132,10 +136,21 @@ async function setupAdminButtons() {
             hideAdminButtons();
             return;
         }
+            showAdminButtons();
+            configureAdminButtonListeners();
+            replaceCalificarWithEditar();
 
-        showAdminButtons();
-        configureAdminButtonListeners();
-        replaceCalificarWithEditar();
+            try {
+                const act = usuarioActual.estadisticas_evaluacion?.promedio_actitud || 0;
+                const apt = usuarioActual.estadisticas_evaluacion?.promedio_aptitud || 0;
+                const ratingEl = document.querySelector('.rating-number');
+                if (ratingEl) ratingEl.textContent = `Act: ${parseFloat(act).toFixed(1)} Apt: ${parseFloat(apt).toFixed(1)}`;
+                const ponderado = (parseFloat(act) + parseFloat(apt)) / 2 || 0;
+                const ponderEl = document.getElementById('ponderadoValue');
+                if (ponderEl) ponderEl.textContent = parseFloat(ponderado).toFixed(1);
+            } catch (e) {
+                console.error('Error mostrando ratings detallados para admin:', e);
+            }
     } catch (error) {
         console.error('Error verificando rol de administrador:', error);
         hideAdminButtons();

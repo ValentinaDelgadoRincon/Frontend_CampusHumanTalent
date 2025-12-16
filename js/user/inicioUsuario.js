@@ -4,6 +4,7 @@ const welcome = document.getElementById('welcome');
 welcome.innerText = `Bienvenido ${data.usuario.nombre} ${data.usuario.apellido}`;
 
 let areasCache = {};
+let isAdmin = false;
 
 async function loadAreas() {
     try {
@@ -56,12 +57,28 @@ function renderUsers(users) {
         const isSameArea = user.id_area_trabajo === currentUserAreaId;
         const requiredMark = isSameArea ? '<div class="required-mark" title="Mismo área">!</div>' : '';
         
-        const score = user.estadisticas_evaluacion?.promedio_general || 0;
-        
+        const promedioActitud = user.estadisticas_evaluacion?.promedio_actitud || 0;
+        const promedioAptitud = user.estadisticas_evaluacion?.promedio_aptitud || 0;
+        const promedioGeneral = parseFloat(promedioActitud) + parseFloat(promedioAptitud) > 0 
+            ? (parseFloat(promedioActitud) + parseFloat(promedioAptitud)) / 2 
+            : 0;
+
+        let scoreHTML = '';
+        if (isAdmin) {
+            scoreHTML = `
+                <div class="score-badge admin-badges">
+                    <div class="badge-act">Act: ${promedioActitud.toFixed(1)}</div>
+                    <div class="badge-apt">Apt: ${promedioAptitud.toFixed(1)}</div>
+                </div>
+            `;
+        } else {
+            scoreHTML = `<div class="score-badge">${promedioGeneral.toFixed(1)}</div>`;
+        }
+
         const cardHTML = `
             <div class="user-card" data-user-id="${user._id}" data-area-id="${user.id_area_trabajo}" ${isSameArea ? 'data-same-area="true"' : ''}>
                 ${requiredMark}
-                <div class="score-badge">${score.toFixed(1)}</div>
+                ${scoreHTML}
                 <div class="card-content">
                     <div class="card-avatar"></div>
                     <h2 class="card-username">${nombreCompleto}</h2>
@@ -113,7 +130,7 @@ function filterUsers() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const searchInput = document.getElementById('searchInput');
     const areasSelect = document.getElementById('areasSelect');
     
@@ -124,20 +141,21 @@ document.addEventListener('DOMContentLoaded', () => {
         areasSelect.addEventListener('change', filterUsers);
     }
     
-    loadAreas();
-    loadUsers();
+    await checkIsAdmin();
+    await loadAreas();
+    await loadUsers();
 });
 
-(async function showAdminBackIfNeeded(){
+async function checkIsAdmin(){
     try {
-        const data = JSON.parse(localStorage.getItem('data'));
-        if (!data || !data.usuario || !data.usuario.id_rol) return;
+        const dataLocal = JSON.parse(localStorage.getItem('data'));
+        if (!dataLocal || !dataLocal.usuario || !dataLocal.usuario.id_rol) return;
 
-        const roleId = data.usuario.id_rol;
+        const roleId = dataLocal.usuario.id_rol;
         const resp = await fetch(`http://localhost:3000/roles/${roleId}`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${data.token}`,
+                'Authorization': `Bearer ${dataLocal.token}`,
                 'Content-Type': 'application/json'
             }
         });
@@ -146,6 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const role = await resp.json();
         const nombreRol = (role.nombre || '').toLowerCase();
         if (!nombreRol.includes('administrador')) return;
+
+        isAdmin = true;
 
         const userLinks = document.querySelector('.user-links');
         if (!userLinks) return;
@@ -162,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
         console.error('No se pudo verificar el rol para mostrar el botón admin-back:', error);
     }
-})();
+}
 
 document.addEventListener('click', (e) => {
     const userCard = e.target.closest('.user-card');

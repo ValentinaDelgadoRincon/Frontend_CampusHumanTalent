@@ -1,7 +1,7 @@
 import { body, param } from "express-validator";
 
 export const crearPreguntasDTO = [
-    body('pregunta')
+    body('texto')
         .notEmpty().withMessage('El texto de la pregunta es obligatorio')
         .trim()
         .isString().withMessage('El texto debe ser una cadena de texto')

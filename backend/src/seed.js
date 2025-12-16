@@ -73,8 +73,8 @@ async function seed() {
 
         // 5. Insertar Tipos de Preguntas
         const tiposPreguntas = await TipoPregunta.insertMany([
-            { nombre: "Actitudinal" },
-            { nombre: "Aptitudinal" }
+            { nombre: "Actitud" },
+            { nombre: "Aptitud" }
         ]);
         console.log(`✅ ${tiposPreguntas.length} tipos de preguntas creados`);
 
@@ -121,7 +121,7 @@ async function seed() {
 
         // 9. Hashear contraseña para usuarios
         const passwordHash = await bcrypt.hash("password123", 10);
-        const adminpassword = await bcrypt.hash("admin", 10);
+        const test = await bcrypt.hash("test", 10);
 
         // 10. Insertar Usuarios (usando ObjectId de relaciones)
         const usuarios = await Usuario.insertMany([
@@ -129,19 +129,6 @@ async function seed() {
                 nombre: "Yerick",
                 apellido: "Lopez",
                 email: "yerick.lopez@example.com",
-                password: passwordHash,
-                telefono: "1234567890",
-                id_rol: roles[0]._id, // Administrador
-                id_estado: estados[0]._id, // Activo
-                id_area_trabajo: areas[0]._id, // Academia
-                id_cargo: cargos[2]._id, // Desarrollador Senior
-                sobremi: "Administrador del sistema",
-                linkedIn: "https://www.linkedin.com/in/yericklopez"
-            },
-            {
-                nombre: "Pepito",
-                apellido: "Lopez",
-                email: "pepito.lopez@example.com",
                 password: passwordHash,
                 telefono: "1234567890",
                 id_rol: roles[0]._id, // Administrador
@@ -165,56 +152,30 @@ async function seed() {
                 linkedIn: "https://www.linkedin.com/in/anagomez"
             },
             {
-                nombre: "Roberta",
-                apellido: "Gomez",
-                email: "roberta.gomez@example.com",
-                password: passwordHash,
-                telefono: "0987654321",
-                id_rol: roles[1]._id, // Empleado
-                id_estado: estados[0]._id, // Activo
-                id_area_trabajo: areas[1]._id, // Full Service
-                id_cargo: cargos[1]._id, // Desarrollador Semi Senior
-                sobremi: "Empleado del sistema",
-                linkedIn: "https://www.linkedin.com/in/anagomez"
-            },
-            {
                 nombre: "Luis",
                 apellido: "Martinez",
                 email: "luis.martinez@example.com",
                 password: passwordHash,
                 telefono: "1122334455",
                 id_rol: roles[1]._id, // Empleado
-                id_estado: estados[0]._id, // Activo
+                id_estado: estados[1]._id, // Activo
                 id_area_trabajo: areas[2]._id, // Talent Up
                 id_cargo: cargos[0]._id, // Desarrollador Junior
                 sobremi: "Empleado del sistema",
                 linkedIn: "https://www.linkedin.com/in/luismartinez"
             },
             {
-                nombre: "Rebeco",
-                apellido: "Martinez",
-                email: "rebeco.martinez@example.com",
-                password: passwordHash,
+                nombre: "test",
+                apellido: "test",
+                email: "test@test.com",
+                password: test,
                 telefono: "1122334455",
                 id_rol: roles[1]._id, // Empleado
-                id_estado: estados[0]._id, // Activo
+                id_estado: estados[1]._id, // Activo
                 id_area_trabajo: areas[2]._id, // Talent Up
                 id_cargo: cargos[0]._id, // Desarrollador Junior
-                sobremi: "Empleado del sistema",
-                linkedIn: "https://www.linkedin.com/in/luismartinez"
-            },
-            {
-                nombre: "admin",
-                apellido: "admin",
-                email: "admin@admin.com",
-                password: adminpassword,
-                telefono: "1122334455",
-                id_rol: roles[1]._id, // Empleado
-                id_estado: estados[0]._id, // Activo
-                id_area_trabajo: areas[2]._id, // Talent Up
-                id_cargo: cargos[0]._id, // Desarrollador Junior
-                sobremi: "Empleado del sistema",
-                linkedIn: "https://www.linkedin.com/in/luismartinez"
+                sobremi: "test del sistema",
+                linkedIn: "https://www.linkedin.com/in/test"
             }
         ]);
         console.log(`✅ ${usuarios.length} usuarios creados`);
@@ -222,15 +183,15 @@ async function seed() {
         // 10. Insertar Encuesta
         const encuestas = await Encuesta.insertMany([
             {
-                nombre: "Encuesta de Autoevaluación - Primer Trimestre",
+                nombre: "Encuesta de Autoevaluación",
                 descripcion: "Encuesta para la autoevaluación del primer trimestre",
                 id_tipo_encuesta: tiposEncuestas[0]._id,
                 id_preguntas: preguntas.map(p => p._id), // Todos los ObjectId de las preguntas
                 fecha_creacion: new Date()
             },
             {
-                nombre: "Encuesta de Evaluación de Pares - Primer Trimestre",
-                descripcion: "Encuesta para la evaluación de pares del primer trimestre",
+                nombre: "Encuesta de Evaluación de Pares",
+                descripcion: "Encuesta para la evaluación de pares",
                 id_tipo_encuesta: tiposEncuestas[1]._id,
                 id_preguntas: preguntas.map(p => p._id), // Todos los ObjectId de las preguntas
                 fecha_creacion: new Date()
@@ -241,8 +202,8 @@ async function seed() {
 
         const ciclosEvaluacion = await CicloEvaluacion.insertMany([
             {
-                nombre: "Ciclo de Evaluación - Primer Trimestre",
-                descripcion: "Ciclo de evaluación correspondiente al primer trimestre del año",
+                nombre: "Ciclo de Evaluación",
+                descripcion: "Ciclo de evaluación correspondiente",
                 encuesta_Id: encuestas[0]._id,
                 fecha_inicio: new Date(new Date().setDate(new Date().getDate() - 30)), // Hace 30 días
                 fecha_fin: new Date(new Date().setDate(new Date().getDate() + 30)), // Dentro de 30 días
@@ -252,117 +213,6 @@ async function seed() {
         ]);
 
         console.log(`✅ ${ciclosEvaluacion.length} ciclo(s) de evaluación creado(s)`);
-
-        const respuestasEncuestas = await RespuestaEncuesta.insertMany([
-            {
-                id_ciclo: ciclosEvaluacion[0]._id,
-                id_encuesta: encuestas[0]._id,
-                id_usuario_evaluador: usuarios[1]._id, // Ana
-                id_usuario_evaluado: usuarios[2]._id, // Luis
-                id_area_trabajo: areas[1]._id, // Full Service
-                id_cargo: cargos[1]._id, // Desarrollador Semi Senior
-                fecha_realizacion: new Date(),
-                respuestas: [
-                    { id_pregunta: preguntas[0]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[1]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[2]._id, respuesta: "No" },
-                    { id_pregunta: preguntas[3]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[4]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[5]._id, respuesta: "No" },
-                    { id_pregunta: preguntas[6]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[7]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[8]._id, respuesta: "No" },
-                    { id_pregunta: preguntas[9]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[10]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[11]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[12]._id, respuesta: "No" },
-                    { id_pregunta: preguntas[13]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[14]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[15]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[16]._id, respuesta: "No" },
-                    { id_pregunta: preguntas[17]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[18]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[19]._id, respuesta: "No" }
-                ]
-            },
-            {
-                id_ciclo: ciclosEvaluacion[0]._id,
-                id_encuesta: encuestas[0]._id,
-                id_usuario_evaluador: usuarios[0]._id, // Yerick
-                id_usuario_evaluado: usuarios[2]._id, // Luis
-                id_area_trabajo: areas[2]._id, // Talent Up
-                id_cargo: cargos[0]._id, // Desarrollador Junior
-                fecha_realizacion: new Date(),
-                respuestas: [
-                    { id_pregunta: preguntas[0]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[1]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[2]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[3]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[4]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[5]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[6]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[7]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[8]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[9]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[10]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[11]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[12]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[13]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[14]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[15]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[16]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[17]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[18]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[19]._id, respuesta: "Sí" }
-                ]
-            },
-            {
-                id_ciclo: ciclosEvaluacion[0]._id,
-                id_encuesta: encuestas[1]._id,
-                id_usuario_evaluador: usuarios[2]._id, // Luis
-                id_usuario_evaluado: usuarios[1]._id, // Ana
-                id_area_trabajo: areas[1]._id, // Full Service
-                id_cargo: cargos[1]._id, // Desarrollador Semi Senior
-                fecha_realizacion: new Date(),
-                respuestas: [
-                    { id_pregunta: preguntas[0]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[1]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[2]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[3]._id, respuesta: "No" },
-                    { id_pregunta: preguntas[4]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[5]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[6]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[7]._id, respuesta: "No" },
-                    { id_pregunta: preguntas[8]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[9]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[10]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[11]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[12]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[13]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[14]._id, respuesta: "No" },
-                    { id_pregunta: preguntas[15]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[16]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[17]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[18]._id, respuesta: "Sí" },
-                    { id_pregunta: preguntas[19]._id, respuesta: "Sí" }
-                ]
-            }
-        ]);
-        console.log(`✅ ${respuestasEncuestas.length} respuesta(s) de encuesta creada(s)`);
-
-        // Calcular estadísticas para los usuarios evaluados
-        console.log("\n📊 Calculando estadísticas de usuarios...");
-        
-        // Importar el servicio de estadísticas
-        const { calcularYActualizarEstadisticas } = await import('./services/estadisticas.services.js');
-        
-        // Calcular para Luis (tiene 2 evaluaciones)
-        await calcularYActualizarEstadisticas(usuarios[2]._id);
-        console.log(`✅ Estadísticas calculadas para ${usuarios[2].nombre} ${usuarios[2].apellido}`);
-        
-        // Calcular para Ana (tiene 1 evaluación)
-        await calcularYActualizarEstadisticas(usuarios[1]._id);
-        console.log(`✅ Estadísticas calculadas para ${usuarios[1].nombre} ${usuarios[1].apellido}`);
 
         console.log("\n✨ Base de datos poblada exitosamente");
         process.exit(0);

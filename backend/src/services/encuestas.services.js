@@ -76,7 +76,7 @@ export async function eliminarEncuesta(id) {
         if (!encuesta) {
             throw new Error("Encuesta no encontrada");
         }
-        return await Encuesta.findByIdAndDelete(id);
+        return await encuesta.remove();
     } catch (error) {
         throw new Error("Error al eliminar la encuesta: " + error.message);
     }
@@ -142,3 +142,4 @@ export async function editarEncuesta(id, datos) {
         throw new Error("Error al editar la encuesta: " + error.message);
     }
 }
+

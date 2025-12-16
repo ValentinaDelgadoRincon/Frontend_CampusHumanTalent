@@ -84,8 +84,6 @@ export async function crearRespuestaEncuesta(datos) {
 
         // 2. Verificar que el ciclo existe y está abierto
         const ciclo = await mongoose.model('CicloEvaluacion').findById(id_ciclo);
-        console.log("CICLO ", ciclo);
-        
         if (!ciclo) {
             throw new Error("El ciclo de evaluación no existe");
         }
@@ -94,7 +92,6 @@ export async function crearRespuestaEncuesta(datos) {
         }
 
         const encuesta = await mongoose.model('Encuesta').findById(id_encuesta);
-        console.log("ENCUESTA:  ", encuesta);
         if (!encuesta) {
             throw new Error("La encuesta no existe");
         }
@@ -135,11 +132,6 @@ export async function crearRespuestaEncuesta(datos) {
         }
 
         const preguntasIds = respuestas.map(r => r.id_pregunta);
-        
-        const preguntasUnicas = new Set(preguntasIds.map(id => id.toString()));
-        if (preguntasUnicas.size !== preguntasIds.length) {
-            throw new Error("No puede haber respuestas duplicadas para la misma pregunta");
-        }
 
         const preguntas = await mongoose.model('Pregunta').find({ 
             _id: { $in: preguntasIds } 
@@ -202,7 +194,7 @@ export async function crearRespuestaEncuesta(datos) {
         });
 
         return await nuevaRespuestaEncuesta.save();
-         
+        
     } catch (error) {
         throw new Error("Error al crear la respuesta de encuesta: " + error.message);
     }

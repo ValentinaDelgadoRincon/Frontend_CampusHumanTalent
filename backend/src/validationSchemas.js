@@ -210,7 +210,13 @@ const usuarioSchema = new mongoose.Schema({
         trim: true
     },
     estadisticas_evaluacion: {
-        promedio_general: { 
+        promedio_actitud: { 
+            type: Number, 
+            default: 0,
+            min: 0,
+            max: 100
+        },
+        promedio_aptitud: { 
             type: Number, 
             default: 0,
             min: 0,
@@ -230,7 +236,13 @@ const usuarioSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'CicloEvaluacion'
             },
-            promedio_ciclo: {
+            promedio_actitud_ciclo: {
+                type: Number,
+                default: 0,
+                min: 0,
+                max: 100
+            },
+            promedio_aptitud_ciclo: {
                 type: Number,
                 default: 0,
                 min: 0,

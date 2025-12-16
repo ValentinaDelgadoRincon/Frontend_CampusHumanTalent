@@ -11,6 +11,8 @@ router.post('/usuario/:id/calcular', estadisticasController.calcularEstadisticas
 
 router.get('/ranking', estadisticasController.obtenerRanking);
 
+router.get('/promedios-por-area', estadisticasController.obtenerPromediosPorArea);
+
 router.post('/recalcular-todas', estadisticasController.recalcularTodasEstadisticas);
 
 export default router;

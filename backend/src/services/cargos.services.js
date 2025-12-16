@@ -55,7 +55,6 @@ export async function eliminarCargo(id) {
         if (!cargo) {
             throw new Error("Cargo no encontrado");
         }
-        
         return await cargo.remove();
     } catch (error) {
         throw new Error("Error al eliminar el cargo: " + error.message);
