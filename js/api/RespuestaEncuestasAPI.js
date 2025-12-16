@@ -7,7 +7,8 @@ class RespuestaEncuestasAPI {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             });
 
             if (!response.ok) {
@@ -29,7 +30,8 @@ class RespuestaEncuestasAPI {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             });
 
             if (!response.ok) {
@@ -52,6 +54,7 @@ class RespuestaEncuestasAPI {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
                 },
+                credentials: "include",
                 body: JSON.stringify(respuestaData)
             });
 
@@ -76,7 +79,8 @@ class RespuestaEncuestasAPI {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             });
 
             if (!response.ok) {
@@ -98,7 +102,8 @@ class RespuestaEncuestasAPI {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             });
 
             if (!response.ok) {

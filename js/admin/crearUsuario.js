@@ -28,14 +28,16 @@ async function loadSelectOptions() {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             }).then(res => res.json()),
             fetch(`http://localhost:3000/estados`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             }).then(res => res.json())
         ]);
 
@@ -142,6 +144,7 @@ form.addEventListener('submit', async (e) => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${data.token}`
             },
+                credentials: "include",
             body: JSON.stringify(payload)
         });
 

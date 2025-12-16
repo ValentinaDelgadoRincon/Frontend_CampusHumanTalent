@@ -145,6 +145,7 @@ preguntaForm.addEventListener('submit', async (e) => {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
             },
+                credentials: "include",
             body: JSON.stringify({ 
                 pregunta: textoValue,
                 id_tipo_pregunta: idTipoPregunta,
@@ -179,7 +180,8 @@ btnConfirmDelete.addEventListener('click', async () => {
             headers: {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+                credentials: "include"
         });
 
         if (response.ok) {

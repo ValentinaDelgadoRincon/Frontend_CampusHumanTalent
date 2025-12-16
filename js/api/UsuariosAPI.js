@@ -9,7 +9,8 @@ const UsuariosAPI = {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             });
 
             if (!response.ok) {
@@ -31,7 +32,8 @@ const UsuariosAPI = {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             });
 
             if (!response.ok) {

@@ -31,7 +31,8 @@ async function loadAreasAndCargos() {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             }).then(res => res.json())
         ]);
 
@@ -149,7 +150,8 @@ async function setupAdminButtons() {
             headers: {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+                credentials: "include"
         });
 
         if (!roleResp.ok) {
@@ -282,6 +284,7 @@ function configureAdminButtonListeners() {
                         'Authorization': `Bearer ${data.token}`,
                         'Content-Type': 'application/json'
                     },
+                credentials: "include",
                     body: JSON.stringify({ id_estado: targetEstado })
                 });
 

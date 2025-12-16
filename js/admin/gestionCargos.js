@@ -99,6 +99,7 @@ cargoForm.addEventListener('submit', async (e) => {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
             },
+                credentials: "include",
             body: JSON.stringify({ nombre: nombreValue })
         });
 
@@ -129,7 +130,8 @@ btnConfirmDelete.addEventListener('click', async () => {
             headers: {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+                credentials: "include"
         });
 
         if (response.ok) {

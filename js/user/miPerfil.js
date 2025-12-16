@@ -105,7 +105,8 @@ async function adjustRatingsForRole(user) {
             headers: {
                 'Authorization': `Bearer ${dataLocal.token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+                credentials: "include"
         });
 
         if (!resp.ok) return;
@@ -209,6 +210,7 @@ async function saveUserData() {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
             },
+                credentials: "include",
             body: JSON.stringify(updateData)
         });
 

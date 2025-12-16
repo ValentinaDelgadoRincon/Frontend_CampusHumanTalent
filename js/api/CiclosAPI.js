@@ -7,7 +7,8 @@ class CiclosAPI {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             });
 
             if (!response.ok) {
@@ -29,7 +30,8 @@ class CiclosAPI {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             });
 
             if (!response.ok) {

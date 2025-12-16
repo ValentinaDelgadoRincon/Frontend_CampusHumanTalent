@@ -305,6 +305,7 @@ btnSaveChanges.addEventListener('click', async () => {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
                 },
+                credentials: "include",
                 body: JSON.stringify(payload)
             });
 
@@ -340,6 +341,7 @@ btnSaveChanges.addEventListener('click', async () => {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
                 },
+                credentials: "include",
                 body: JSON.stringify(payload)
             });
 

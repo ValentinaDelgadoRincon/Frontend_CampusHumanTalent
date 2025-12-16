@@ -147,7 +147,8 @@ async function checkIsAdmin(){
             headers: {
                 'Authorization': `Bearer ${dataLocal.token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+                credentials: "include"
         });
 
         if (!resp.ok) return;

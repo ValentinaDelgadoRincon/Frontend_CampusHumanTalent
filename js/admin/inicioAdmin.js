@@ -51,7 +51,8 @@ async function validateAdminRole() {
             headers: {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
-            }
+            },
+                credentials: "include"
         });
 
         if (!roleResp.ok) return false;
@@ -165,6 +166,7 @@ cycleForm.addEventListener('submit', async (e) => {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
             },
+                credentials: "include",
             body: JSON.stringify(nuevoCiclo)
         });
 
@@ -280,7 +282,8 @@ window.deleteEncuesta = async (id) => {
                 headers: {
                     'Authorization': `Bearer ${data.token}`,
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: "include"
             });
 
             if (response.ok) {
@@ -329,6 +332,7 @@ btnTerminar.addEventListener('click', async () => {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
             },
+                credentials: "include",
             body: JSON.stringify(updateData)
         });
 

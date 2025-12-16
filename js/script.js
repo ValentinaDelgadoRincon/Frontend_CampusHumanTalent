@@ -70,7 +70,8 @@ if (loginForm && emailInput && passwordInput && btnLogin && msgError) {
                             headers: {
                                 'Authorization': `Bearer ${data.token}`,
                                 'Content-Type': 'application/json'
-                            }
+                            },
+                credentials: "include"
                         });
 
                         if (roleResponse.ok) {
