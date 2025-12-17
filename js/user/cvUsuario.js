@@ -151,7 +151,7 @@ async function setupAdminButtons() {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
             },
-                credentials: "include"
+            credentials: "include"
         });
 
         if (!roleResp.ok) {
@@ -174,14 +174,14 @@ async function setupAdminButtons() {
         try {
             const act = usuarioActual.estadisticas_evaluacion?.promedio_actitud || 0;
             const apt = usuarioActual.estadisticas_evaluacion?.promedio_aptitud || 0;
-            
+
             const ratingBox = document.querySelector('.rating-box.admin-only');
             const ratingNum = document.querySelector('.rating-number');
 
             if (ratingBox) {
                 if (ratingNum) ratingNum.style.display = 'none';
                 ratingBox.style.display = 'flex';
-                
+
                 document.getElementById('ratingAptitud').textContent = parseFloat(apt).toFixed(1);
                 document.getElementById('ratingActitud').textContent = parseFloat(act).toFixed(1);
             } else if (ratingNum) {
@@ -249,7 +249,7 @@ function configureAdminButtonListeners() {
     const updateToggleButton = () => {
         if (!btnDeshabilitar) return;
         const estadoId = extractId(usuarioActual?.id_estado) || '';
-        
+
         if (estadoId === ESTADO_INACTIVO) {
             btnDeshabilitar.textContent = 'Habilitar';
             btnDeshabilitar.style.backgroundColor = '#28a745';
@@ -284,7 +284,7 @@ function configureAdminButtonListeners() {
                         'Authorization': `Bearer ${data.token}`,
                         'Content-Type': 'application/json'
                     },
-                credentials: "include",
+                    credentials: "include",
                     body: JSON.stringify({ id_estado: targetEstado })
                 });
 
@@ -389,13 +389,17 @@ async function saveAdminEditForm(e) {
     const form = document.getElementById('editForm');
     const formData = new FormData(form);
 
+
+    const dataObj = Object.fromEntries(formData.entries());
+
     try {
         const resp = await fetch(`http://localhost:3000/usuarios/admin/${usuarioActual._id}`, {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${data.token}`
+                'Authorization': `Bearer ${data.token}`,
+                'Content-Type': 'application/json'
             },
-            body: formData
+            body: JSON.stringify(dataObj)
         });
 
         if (!resp.ok) {
