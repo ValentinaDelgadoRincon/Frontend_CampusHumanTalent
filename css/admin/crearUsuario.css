@@ -1,35 +1,40 @@
 :root {
-    --dark-blue: #00265a;
-    --border-blue: #3b5c92;
-    --bg-gray: #d9d9d9;
+    --dark-blue: #1F2933;
+    --primary-blue: #2F80ED;
+    --border-blue: #2F80ED;
+    --bg-gray: #E0E0E0;
+    --white: #ffffff;
+    --shadow-accent: #F2C94C;
 }
+
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
 }
 
 body {
-    background-color: #ffffff;
+    background-color: var(--white);
     min-height: 100vh;
-    padding: 20px 40px;
+    padding: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     background-image:
-    linear-gradient(to right, #cccccc36 1px, transparent 1px),
-    linear-gradient(to bottom, #cccccc52 1px, transparent 1px); 
-background-size: 20px 20px;
-background-repeat: repeat; 
+        linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
 }
+
 
 .main-container {
     width: 100%;
-    max-width: 1000px;
+    max-width: 1100px;
     position: relative;
 }
+
 
 .header-nav {
     position: absolute;
@@ -38,30 +43,36 @@ background-repeat: repeat;
 }
 
 .back-arrow {
-    font-size: 2.5rem;
+    font-size: 2.4rem;
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
     transform: scaleX(-1);
-    background: -webkit-linear-gradient(#0033a0, #00bfff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--primary-blue);
+    transition: transform 0.2s ease;
+}
+
+.back-arrow:hover {
+    transform: scaleX(-1) translateX(-4px);
 }
 
 .page-title {
     text-align: center;
-    font-size: 2rem;
-    font-weight: 800;
-    color: #000;
-    margin-bottom: 50px;
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    font-weight: 900;
+    color: var(--dark-blue);
+    margin-bottom: 55px;
     margin-top: 10px;
+    text-transform: uppercase;
 }
+
 
 .content-wrapper {
     display: flex;
     justify-content: space-between;
     gap: 60px;
 }
+
 
 .form-column {
     flex: 1.5;
@@ -72,24 +83,26 @@ background-repeat: repeat;
 
 .custom-input {
     width: 100%;
-    padding: 12px 15px;
+    padding: 14px 18px;
     border: 2px solid var(--border-blue);
-    border-radius: 10px;
+    border-radius: 14px;
     font-size: 1rem;
-    color: #555;
+    color: #333;
     outline: none;
-    transition: border-color 0.3s;
-    background-color: white;
+    background-color: var(--white);
+    transition: border 0.2s ease, box-shadow 0.2s ease;
     appearance: none;
 }
 
 .custom-input:focus {
-    border-color: var(--dark-blue);
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(47,128,237,0.15);
 }
+
 
 .input-row {
     display: flex;
-    gap: 10px;
+    gap: 14px;
 }
 
 .select-wrapper {
@@ -99,37 +112,40 @@ background-repeat: repeat;
 
 .select-icon {
     position: absolute;
-    right: 15px;
+    right: 18px;
     top: 50%;
     transform: translateY(-50%);
-    color: #000;
     pointer-events: none;
+    color: var(--dark-blue);
 }
+
 
 .photo-column {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 20px;
+    padding-top: 10px;
 }
 
+
 .avatar-preview {
-    width: 180px;
-    height: 180px;
+    width: 200px;
+    height: 200px;
     background-color: var(--dark-blue);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+    box-shadow: 6px 6px 0 var(--shadow-accent);
     position: relative;
 }
 
 .default-icon {
     font-size: 6rem;
-    color: #8ab4f8;
+    color: #9ec1ff;
     margin-top: 20px;
 }
 
@@ -143,55 +159,113 @@ background-repeat: repeat;
     display: none;
 }
 
+
 .btn-upload {
-    background-color: #d9d9d9;
-    border: 1px solid #000;
-    padding: 10px 30px;
-    border-radius: 8px;
+    background-color: var(--bg-gray);
+    border: 2px solid var(--dark-blue);
+    padding: 12px 34px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 1rem;
-    color: #000;
+    font-weight: bold;
+    color: var(--dark-blue);
     display: flex;
     align-items: center;
     gap: 10px;
-    transition: background 0.3s;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-upload:hover {
-    background-color: #c0c0c0;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--primary-blue);
 }
+
 
 .spacer {
     flex-grow: 1;
-    min-height: 50px;
+    min-height: 40px;
 }
 
 .btn-create {
     align-self: flex-end;
-    background-color: var(--dark-blue);
-    color: white;
+    background: linear-gradient(135deg, #2F80ED, #56CCF2);
+    color: #ffffff;
     border: none;
-    padding: 12px 40px;
-    border-radius: 8px;
+    padding: 14px 42px;
+    border-radius: 14px;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 800;
     cursor: pointer;
     width: 100%;
-    max-width: 200px;
+    max-width: 220px;
+    box-shadow: 6px 6px 0 #1F2933;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-create:hover {
-    background-color: #003ea8;
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 #1F2933;
 }
+
+
+.btn-create:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--primary-blue);
+}
+.custom-input {
+    padding: 14px 18px;
+    border: 2px solid var(--border-blue);
+    border-radius: 14px;
+    font-size: 1rem;
+    color: #222;
+    background-color: #ffffff;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+.custom-input:hover {
+    border-color: #1e6fff;
+    transform: translateY(-2px);
+}
+
+
+.custom-input:focus {
+    border-color: #1e6fff;
+    background-color: #f8fbff;
+    transform: translateY(-4px) scale(1.01);
+    box-shadow:
+        0 12px 25px rgba(30, 111, 255, 0.25),
+        0 0 0 4px rgba(30, 111, 255, 0.2);
+}
+
+.custom-input::placeholder {
+    color: #9aa3af;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.custom-input:focus::placeholder {
+    transform: translateX(6px);
+    opacity: 0.35;
+}
+
 
 @media (max-width: 768px) {
     .content-wrapper {
         flex-direction: column-reverse;
         align-items: center;
+        gap: 40px;
     }
 
     .form-column {
         width: 100%;
+    }
+
+    .input-row {
+        flex-direction: column;
     }
 
     .btn-create {
