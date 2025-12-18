@@ -399,6 +399,7 @@ async function saveAdminEditForm(e) {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
             },
+            credentials: "include",
             body: JSON.stringify(dataObj)
         });
 
