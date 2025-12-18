@@ -36,6 +36,7 @@ if (loginForm && emailInput && passwordInput && btnLogin && msgError) {
             const response = await fetch(api, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: "include",
                 body: JSON.stringify(datosUsuario)
             });
 

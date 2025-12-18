@@ -332,8 +332,7 @@ btnTerminar.addEventListener('click', async () => {
                 'Authorization': `Bearer ${data.token}`,
                 'Content-Type': 'application/json'
             },
-                credentials: "include",
-            body: JSON.stringify(updateData)
+                credentials: "include"
         });
 
         if (response.ok) {
