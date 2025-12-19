@@ -326,6 +326,33 @@ document.addEventListener('DOMContentLoaded', () => {
             await RespuestaEncuestasAPI.create(encuestaData);
             
             alert('¡Encuesta enviada correctamente!');
+            
+            try {
+                const currentUser = data.usuario;
+                if (currentUser && currentUser.id_rol) {
+                    const roleResp = await fetch(`http://localhost:3000/roles/${currentUser.id_rol}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${data.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: "include"
+                    });
+                    
+                    if (roleResp.ok) {
+                        const role = await roleResp.json();
+                        const isAdmin = (role.nombre || '').toLowerCase().includes('administrador');
+                        
+                        if (isAdmin) {
+                            window.location.href = '../admin/inicioAdmin.html';
+                            return;
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('Error verificando rol para redirección:', e);
+            }
+            
             window.location.href = './inicioUsuario.html';
         } catch (error) {
             console.error('Error al enviar la encuesta:', error);

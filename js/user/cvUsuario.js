@@ -135,6 +135,9 @@ function renderUserInfo(user) {
 
     const btnCalificar = document.getElementById('btnCalificarUser');
     if (btnCalificar) btnCalificar.href = `../../views/user/encuestaUsuario.html?id=${user._id}`;
+    
+    const btnCalificarAdmin = document.getElementById('btnCalificarAdmin');
+    if (btnCalificarAdmin) btnCalificarAdmin.href = `../../views/user/encuestaUsuario.html?id=${user._id}`;
 }
 
 async function setupAdminButtons() {
@@ -170,6 +173,7 @@ async function setupAdminButtons() {
         showAdminButtons();
         configureAdminButtonListeners();
         replaceCalificarWithEditar();
+        showCalificarButtonForAdmin();
 
         try {
             const act = usuarioActual.estadisticas_evaluacion?.promedio_actitud || 0;
@@ -218,6 +222,13 @@ function replaceCalificarWithEditar() {
     });
 
     btnCalificar.parentNode.replaceChild(newBtn, btnCalificar);
+}
+
+function showCalificarButtonForAdmin() {
+    const btnCalificarAdmin = document.getElementById('btnCalificarAdmin');
+    if (btnCalificarAdmin) {
+        btnCalificarAdmin.style.display = 'block';
+    }
 }
 
 function hideAdminButtons() {
