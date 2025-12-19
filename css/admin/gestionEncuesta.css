@@ -46,7 +46,6 @@ body {
     cursor: pointer;
     text-decoration: none;
     transform: scaleX(-1);
-    background: linear-gradient(135deg, #0033a0, #00bfff);
     -webkit-text-fill-color: transparent;
     transition: transform 0.3s ease;
 }

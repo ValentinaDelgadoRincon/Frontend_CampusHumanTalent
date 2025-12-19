@@ -45,7 +45,6 @@ background-repeat: repeat;
     cursor: pointer;
     text-decoration: none;
     display: inline-block;
-    background: -webkit-linear-gradient(#0033a0, #00bfff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     transform: scaleX(-1);
