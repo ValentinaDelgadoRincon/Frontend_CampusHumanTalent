@@ -426,6 +426,9 @@ p {
     border-radius: 15px;
     width: 90%;
     max-width: 500px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     animation: slideIn 0.3s ease-out;
 }
@@ -476,10 +479,12 @@ p {
 
 .modal-body {
     padding: 20px;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
 }
@@ -492,7 +497,8 @@ p {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     padding: 10px 12px;
     border: 1px solid #ddd;
     border-radius: 6px;
@@ -502,8 +508,20 @@ p {
     background-color: #fafafa;
 }
 
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8"%3E%3Cpath fill="%230033a0" d="M1.41 0L6 4.59L10.59 0L12 1.41l-6 6l-6-6z"/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 35px;
+}
+
 .form-group input:focus,
-.form-group textarea:focus {
+.form-group textarea:focus,
+.form-group select:focus {
     outline: none;
     border-color: #0033a0;
     background-color: #ffffff;
@@ -588,4 +606,44 @@ p {
 
 .admin-only {
     display: none;
+}
+
+@media (max-width: 600px) {
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .modal-body,
+    .modal-footer {
+        padding: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        font-size: 0.9rem;
+        padding: 8px 10px;
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+
+    .btn-cancel,
+    .modal-footer .btn-save {
+        width: 100%;
+    }
 }

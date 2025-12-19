@@ -342,7 +342,43 @@ function configureAdminButtonListeners() {
     }
 }
 
-function openAdminEditModal() {
+function populateSelectCargo() {
+    const select = document.getElementById('id_cargo');
+    if (!select) return Promise.resolve();
+    
+    select.innerHTML = '<option value="">Seleccione un cargo</option>';
+    
+    return CargosAPI.getAll().then(cargos => {
+        cargos.forEach(cargo => {
+            const option = document.createElement('option');
+            option.value = cargo._id;
+            option.textContent = cargo.nombre;
+            select.appendChild(option);
+        });
+    }).catch(error => {
+        console.error('Error cargando cargos:', error);
+    });
+}
+
+function populateSelectArea() {
+    const select = document.getElementById('id_area_trabajo');
+    if (!select) return Promise.resolve();
+    
+    select.innerHTML = '<option value="">Seleccione un área</option>';
+    
+    return Areas_TrabajoAPI.getAll().then(areas => {
+        areas.forEach(area => {
+            const option = document.createElement('option');
+            option.value = area._id;
+            option.textContent = area.nombre;
+            select.appendChild(option);
+        });
+    }).catch(error => {
+        console.error('Error cargando áreas:', error);
+    });
+}
+
+async function openAdminEditModal() {
     const modal = document.getElementById('editModal');
     if (!modal || !usuarioActual) return;
 
@@ -358,6 +394,21 @@ function openAdminEditModal() {
     for (const [id, val] of Object.entries(inputs)) {
         const el = document.getElementById(id);
         if (el) el.value = val || '';
+    }
+
+    await Promise.all([
+        populateSelectCargo(),
+        populateSelectArea()
+    ]);
+
+    if (usuarioActual.id_cargo) {
+        const cargoSelect = document.getElementById('id_cargo');
+        if (cargoSelect) cargoSelect.value = usuarioActual.id_cargo;
+    }
+
+    if (usuarioActual.id_area_trabajo) {
+        const areaSelect = document.getElementById('id_area_trabajo');
+        if (areaSelect) areaSelect.value = usuarioActual.id_area_trabajo;
     }
 
     const preview = document.getElementById('previewFoto');
@@ -389,8 +440,9 @@ async function saveAdminEditForm(e) {
     const form = document.getElementById('editForm');
     const formData = new FormData(form);
 
-
     const dataObj = Object.fromEntries(formData.entries());
+    
+    delete dataObj.foto;
 
     try {
         const resp = await fetch(`http://localhost:3000/usuarios/admin/${usuarioActual._id}`, {
