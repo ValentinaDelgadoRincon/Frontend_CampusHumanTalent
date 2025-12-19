@@ -126,7 +126,7 @@ btnConfirmDelete.addEventListener('click', async () => {
     if (!areaToDeleteId) return;
 
     try {
-        const response = await fetch(`http://localhost:3000/areas-trabajo/${areaToDeleteId}}`, {
+        const response = await fetch(`http://localhost:3000/areas-trabajo/${areaToDeleteId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${data.token}`,
@@ -137,7 +137,7 @@ btnConfirmDelete.addEventListener('click', async () => {
 
         if (response.ok) {
             deleteModal.classList.remove('show');
-            loadCargos();
+            loadAreas();
         } else {
             alert('Error al eliminar el área (puede que tenga usuarios asociados)');
         }
@@ -149,7 +149,7 @@ btnConfirmDelete.addEventListener('click', async () => {
 
 btnCloseDelete.addEventListener('click', () => {
     deleteModal.classList.remove('show');
-    cargoToDeleteId = null;
+    areaToDeleteId = null;
 });
 
 window.onclick = (event) => {
