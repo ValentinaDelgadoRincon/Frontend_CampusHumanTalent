@@ -37,6 +37,10 @@ function renderStats(areas, usuarios) {
 
         const promedios = calculateAverages(usuariosArea);
 
+        if (promedios.actitud === 'N/A' && promedios.aptitud === 'N/A') {
+            return;
+        }
+
         const card = document.createElement('div');
         card.className = 'stat-card';
 
