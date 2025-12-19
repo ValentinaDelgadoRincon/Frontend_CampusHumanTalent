@@ -48,7 +48,14 @@ function fillUserInfo(user) {
     ratingValue = parseFloat(ratingValue).toFixed(1);
     ratingElement.textContent = ratingValue;
 
-    const infoSections = document.querySelectorAll('.info-section');
+    const leftColSections = document.querySelectorAll('.left-col .info-section');
+    const sobreMiSection = leftColSections[0];
+    sobreMiSection.querySelector('h3').textContent = 'Sobre mí';
+    sobreMiSection.querySelector('p').textContent = user.sobremi || 'Sin descripción';
+    sobreMiSection.dataset.field = 'sobremi';
+    sobreMiSection.dataset.value = user.sobremi || '';
+
+    const infoSections = document.querySelectorAll('.right-col .info-section');
     
     const cargoSection = infoSections[0];
     cargoSection.querySelector('h3').textContent = 'Cargo';
