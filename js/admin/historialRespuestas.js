@@ -34,6 +34,32 @@ async function loadEvaluationHistory() {
         evaluationsList.innerHTML = '';
 
         const usuariosCache = {};
+        const ciclosCache = {};
+
+        async function getCicloNombre(idOrObj) {
+            if (!idOrObj) return 'Ciclo desconocido';
+
+            if (typeof idOrObj === 'object' && idOrObj.nombre) return idOrObj.nombre;
+
+            if (typeof idOrObj === 'object' && idOrObj._id) {
+                if (idOrObj.nombre) return idOrObj.nombre;
+                idOrObj = idOrObj._id;
+            }
+
+            const id = String(idOrObj);
+            if (ciclosCache[id]) return ciclosCache[id];
+
+            try {
+                const ciclo = await CiclosAPI.getById(id);
+                const nombre = ciclo?.nombre || 'Ciclo desconocido';
+                ciclosCache[id] = nombre;
+                return nombre;
+            } catch (err) {
+                console.error('Error obteniendo ciclo', id, err);
+                ciclosCache[id] = 'Ciclo desconocido';
+                return 'Ciclo desconocido';
+            }
+        }
 
         async function getUsuarioNombre(idOrObj) {
             if (!idOrObj) return 'Usuario desconocido';
@@ -60,8 +86,32 @@ async function loadEvaluationHistory() {
             }
         }
 
-        for (const respuesta of respuestas) {
-            const card = document.createElement('a');
+        const respuestasPorCiclo = {};
+        
+        respuestas.forEach(respuesta => {
+            const cicloId = respuesta.id_ciclo?._id || respuesta.id_ciclo || 'sin-ciclo';
+            if (!respuestasPorCiclo[cicloId]) {
+                respuestasPorCiclo[cicloId] = [];
+            }
+            respuestasPorCiclo[cicloId].push(respuesta);
+        });
+
+        for (const cicloId in respuestasPorCiclo) {
+            const cicloNombre = await getCicloNombre(cicloId);
+            
+            const cicloHeader = document.createElement('div');
+            cicloHeader.className = 'ciclo-header';
+            cicloHeader.innerHTML = `
+                <h2>${cicloNombre}</h2>
+                <span class="count-badge">${respuestasPorCiclo[cicloId].length} evaluación${respuestasPorCiclo[cicloId].length !== 1 ? 'es' : ''}</span>
+            `;
+            evaluationsList.appendChild(cicloHeader);
+
+            const cicloGroup = document.createElement('div');
+            cicloGroup.className = 'ciclo-group';
+
+            for (const respuesta of respuestasPorCiclo[cicloId]) {
+                const card = document.createElement('a');
             card.className = 'card';
             card.href = `../user/encuestaUsuario.html?responseId=${respuesta._id}&id=${evaluadoId}&view=1`;
             card.onclick = (e) => {
@@ -93,9 +143,12 @@ async function loadEvaluationHistory() {
 
             cardText.innerHTML = `${nombreEvaluador} calificó » <strong>${puntaje} / 100</strong>`;
 
-            card.appendChild(avatar);
-            card.appendChild(cardText);
-            evaluationsList.appendChild(card);
+                card.appendChild(avatar);
+                card.appendChild(cardText);
+                cicloGroup.appendChild(card);
+            }
+
+            evaluationsList.appendChild(cicloGroup);
         }
 
     } catch (error) {
