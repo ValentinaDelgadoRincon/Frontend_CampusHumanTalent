@@ -90,21 +90,45 @@ async function loadSurveyData() {
         titleInput.value = currentSurvey.titulo || currentSurvey.nombre;
         descripcionInput.value = currentSurvey.descripcion || '';
         
-        originalSurveyData = {
-            nombre: titleInput.value,
-            descripcion: descripcionInput.value,
-            id_preguntas: surveyQuestionsIds ? [...surveyQuestionsIds] : []
-        };
-        
         const fecha = new Date(currentSurvey.fecha_creacion || Date.now());
         fechaCreacionTxt.textContent = fecha.toLocaleDateString();
 
-        if (currentSurvey.id_tipo_encuesta) {
+        if (mode === 'edit') {
+            let tipos = [];
             try {
-                const tipo = await TipoEncuestasAPI.getById(currentSurvey.id_tipo_encuesta);
-                tipoEncuestaInput.value = tipo.nombre;
+                tipos = await TipoEncuestasAPI.getAll();
             } catch (e) {
-                tipoEncuestaInput.value = "Desconocido";
+                console.warn('No se pudieron cargar tipos de encuesta', e);
+            }
+
+            const tipoWrapper = tipoEncuestaInput.parentNode;
+            tipoWrapper.innerHTML = `
+                <h3>Tipo de Encuesta:</h3>
+                <select id="tipoEncuestaSelect" class="info-input"></select>
+            `;
+            const tipoSelect = document.getElementById('tipoEncuestaSelect');
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.text = '-- Seleccionar tipo --';
+            tipoSelect.appendChild(defaultOpt);
+            tipos.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t._id;
+                opt.text = t.nombre;
+                tipoSelect.appendChild(opt);
+            });
+
+            if (currentSurvey.id_tipo_encuesta) {
+                tipoSelect.value = currentSurvey.id_tipo_encuesta;
+            }
+        } else {
+            if (currentSurvey.id_tipo_encuesta) {
+                try {
+                    const tipo = await TipoEncuestasAPI.getById(currentSurvey.id_tipo_encuesta);
+                    tipoEncuestaInput.value = tipo.nombre;
+                } catch (e) {
+                    tipoEncuestaInput.value = "Desconocido";
+                }
             }
         }
 
@@ -127,6 +151,13 @@ async function loadSurveyData() {
 
         renderSurveyQuestions();
         
+        originalSurveyData = {
+            nombre: titleInput.value,
+            descripcion: descripcionInput.value,
+            id_preguntas: surveyQuestionsIds ? [...surveyQuestionsIds] : [],
+            id_tipo_encuesta: currentSurvey.id_tipo_encuesta || ''
+        };
+        
         btnSaveChanges.disabled = true;
         
         attachChangeListeners();
@@ -143,9 +174,16 @@ function hasChanges() {
     const origNombre = originalSurveyData.nombre || '';
     const origDescripcion = originalSurveyData.descripcion || '';
     const origIds = Array.isArray(originalSurveyData.id_preguntas) ? originalSurveyData.id_preguntas : [];
+    const origTipo = originalSurveyData.id_tipo_encuesta || '';
 
     if (currentNombre !== origNombre) return true;
     if (currentDescripcion !== origDescripcion) return true;
+
+    const tipoSelect = document.getElementById('tipoEncuestaSelect');
+    if (tipoSelect) {
+        const currentTipo = tipoSelect.value || '';
+        if (currentTipo !== origTipo) return true;
+    }
 
     if (surveyQuestionsIds.length !== origIds.length) return true;
     if (!surveyQuestionsIds.every((id, idx) => id === origIds[idx])) return true;
@@ -159,6 +197,11 @@ function attachChangeListeners() {
     };
     titleInput.addEventListener('input', updateButtonState);
     descripcionInput.addEventListener('input', updateButtonState);
+    
+    const tipoSelect = document.getElementById('tipoEncuestaSelect');
+    if (tipoSelect) {
+        tipoSelect.addEventListener('change', updateButtonState);
+    }
 }
 
 function renderSurveyQuestions() {
