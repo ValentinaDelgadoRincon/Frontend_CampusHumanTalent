@@ -194,6 +194,174 @@ body {
     box-shadow: 8px 8px 0 var(--yellow-accent);
 }
 
+.modal-content h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--black-soft);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--black-soft);
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    font-family: 'Arial', sans-serif;
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: var(--blue-main);
+}
+
+.select-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.select-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--black-soft);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-confirm,
+.btn-cancel {
+    padding: 12px 30px;
+    border: 2px solid var(--black-soft);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-confirm {
+    background-color: var(--blue-main);
+    color: var(--white);
+}
+
+.btn-confirm:hover {
+    background-color: #1e60c7;
+}
+
+.btn-cancel {
+    background-color: var(--white);
+    color: var(--black-soft);
+}
+
+.btn-cancel:hover {
+    background-color: #f0f0f0;
+}
+
+.encuestas-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.encuesta-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    background-color: #f5f5f5;
+    border: 2px solid var(--black-soft);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.encuesta-row:hover {
+    background-color: #e8e8e8;
+}
+
+.encuesta-input-fake {
+    flex: 1;
+    padding: 8px 12px;
+    background-color: var(--white);
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    color: var(--black-soft);
+}
+
+.btn-edit-small {
+    padding: 8px 16px;
+    background-color: var(--blue-main);
+    color: var(--white);
+    border: 2px solid var(--black-soft);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.btn-edit-small:hover {
+    background-color: #1e60c7;
+    transform: translateY(-2px);
+}
+
+.trash-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ff4444;
+    border: 2px solid var(--black-soft);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.trash-icon:hover {
+    background-color: #cc0000;
+    transform: translateY(-2px);
+}
+
+.trash-icon i {
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.btn-circle-plus {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--blue-main);
+    border: 3px solid var(--black-soft);
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: 3px 3px 0 var(--yellow-accent);
+}
+
+.btn-circle-plus:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 5px 5px 0 var(--yellow-accent);
+}
+
 
 @media (max-width: 992px) {
     body {
