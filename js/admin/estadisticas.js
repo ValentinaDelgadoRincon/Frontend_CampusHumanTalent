@@ -1,5 +1,9 @@
 const data = JSON.parse(localStorage.getItem('data'));
 const statsGrid = document.getElementById('statsGrid');
+let currentView = 'areas-generales';
+let currentAreaGeneralId = null;
+let usuariosCache = [];
+let areasTrabajoCache = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     if (!data || !data.token) {
@@ -11,12 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadStatistics() {
     try {
-        const [areas, usuarios] = await Promise.all([
-            Areas_TrabajoAPI.getAll(),
-            UsuariosAPI.getAll()
-        ]);
+        const areasGenerales = await AreasGeneralesAPI.getAll();
+        usuariosCache = await UsuariosAPI.getAll();
+        areasTrabajoCache = await Areas_TrabajoAPI.getAll();
 
-        renderStats(areas, usuarios);
+        showAreasGenerales(areasGenerales);
 
     } catch (error) {
         console.error("Error al cargar estadísticas:", error);
@@ -24,28 +27,38 @@ async function loadStatistics() {
     }
 }
 
-function renderStats(areas, usuarios) {
+function showAreasGenerales(areasGenerales) {
     statsGrid.innerHTML = '';
+    currentView = 'areas-generales';
 
-    if (areas.length === 0) {
-        statsGrid.innerHTML = '<p class="loading-text">No hay áreas registradas.</p>';
+    if (areasGenerales.length === 0) {
+        statsGrid.innerHTML = '<p class="loading-text">No hay áreas generales registradas.</p>';
         return;
     }
 
-    areas.forEach(area => {
-        const usuariosArea = usuarios.filter(u => u.id_area_trabajo === area._id);
+    areasGenerales.forEach(areaGeneral => {
+        const usuariosAreaGeneral = usuariosCache.filter(usuario => {
+            const areasTrabajo = areasTrabajoCache.find(a => a._id === usuario.id_area_trabajo);
+            if (!areasTrabajo) return false;
 
-        const promedios = calculateAverages(usuariosArea);
+            const areaGeneralId = typeof areasTrabajo.id_area_general === 'string'
+                ? areasTrabajo.id_area_general
+                : areasTrabajo.id_area_general._id;
 
-        if (promedios.actitud === 'N/A' && promedios.aptitud === 'N/A') {
-            return;
-        }
+            return areaGeneralId === areaGeneral._id;
+        });
+
+        const promedios = calculateAverages(usuariosAreaGeneral);
+
+        if (promedios.actitud === 'N/A' && promedios.aptitud === 'N/A') return
+
 
         const card = document.createElement('div');
         card.className = 'stat-card';
+        card.style.cursor = 'pointer';
 
         card.innerHTML = `
-            <h2 class="area-name">${area.nombre}</h2>
+            <h2 class="area-name">${areaGeneral.nombre}</h2>
             
             <div class="score-block">
                 <div class="score-number">${promedios.actitud}</div>
@@ -58,8 +71,74 @@ function renderStats(areas, usuarios) {
             </div>
         `;
 
+        card.addEventListener('click', () => {
+            showSubAreas(areaGeneral._id, areaGeneral.nombre);
+        });
+
         statsGrid.appendChild(card);
     });
+}
+
+function showSubAreas(areaGeneralId, areaGeneralName) {
+    statsGrid.innerHTML = '';
+    currentView = 'sub-areas';
+    currentAreaGeneralId = areaGeneralId;
+
+    const subAreas = areasTrabajoCache.filter(area => {
+        const areaGeneralIdValue = typeof area.id_area_general === 'string'
+            ? area.id_area_general
+            : area.id_area_general._id;
+        return areaGeneralIdValue === areaGeneralId;
+    });
+
+    if (subAreas.length === 0) {
+        statsGrid.innerHTML = '<p class="loading-text">No hay sub-áreas en esta área general.</p>';
+        return;
+    }
+
+    const subAreasHeader = document.createElement('div');
+    subAreasHeader.className = 'sub-areas-header';
+    subAreasHeader.innerHTML = `
+        <button class="back-button-new" onclick="loadStatistics()">
+            <i class="fas fa-arrow-left"></i> Volver a Áreas Generales
+        </button>
+        <h2 class="sub-areas-title">${areaGeneralName}</h2>
+    `;
+    statsGrid.appendChild(subAreasHeader);
+
+    const subAreasContainer = document.createElement('div');
+    subAreasContainer.className = 'sub-areas-cards';
+
+    subAreas.forEach(subArea => {
+        const usuariosSubArea = usuariosCache.filter(u => u.id_area_trabajo === subArea._id);
+
+        const promedios = calculateAverages(usuariosSubArea);
+
+        if (promedios.actitud === 'N/A' && promedios.aptitud === 'N/A') {
+            return;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'stat-card sub-area-card';
+
+        card.innerHTML = `
+            <h3 class="area-name">${subArea.nombre}</h3>
+            
+            <div class="score-block">
+                <div class="score-number">${promedios.actitud}</div>
+                <div class="score-label">Actitud</div>
+            </div>
+
+            <div class="score-block">
+                <div class="score-number">${promedios.aptitud}</div>
+                <div class="score-label">Aptitud</div>
+            </div>
+        `;
+
+        subAreasContainer.appendChild(card);
+    });
+
+    statsGrid.appendChild(subAreasContainer);
 }
 
 function calculateAverages(usuarios) {

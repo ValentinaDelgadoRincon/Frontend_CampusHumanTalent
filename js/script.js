@@ -4,6 +4,49 @@ const passwordInput = document.getElementById('passwordInput');
 const btnLogin = document.getElementById('btnLogin');
 const msgError = document.getElementById('mensaje-error');
 
+function validateExistingSession() {
+    const storedData = localStorage.getItem('data');
+    if (storedData) {
+        try {
+            const data = JSON.parse(storedData);
+            if (data.usuario && data.usuario.id_rol && data.token) {
+                (async () => {
+                    try {
+                        const roleId = data.usuario.id_rol;
+                        const roleResponse = await fetch(`http://localhost:3000/roles/${roleId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${data.token}`,
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include'
+                        });
+
+                        if (roleResponse.ok) {
+                            const roleData = await roleResponse.json();
+                            const nombreRol = (roleData.nombre || '').toLowerCase();
+                            if (nombreRol.includes('administrador')) {
+                                window.location.href = './views/admin/inicioAdmin.html';
+                            } else {
+                                window.location.href = './views/user/inicioUsuario.html';
+                            }
+                        } else {
+                            window.location.href = './views/user/inicioUsuario.html';
+                        }
+                    } catch (error) {
+                        console.error('Error validating session:', error);
+                        window.location.href = './views/user/inicioUsuario.html';
+                    }
+                })();
+            }
+        } catch (error) {
+            console.error('Error parsing stored session:', error);
+        }
+    }
+}
+
+validateExistingSession();
+
 function mostrarError(mensaje) {
     msgError.innerText = mensaje;
     msgError.style.display = 'block';
@@ -52,49 +95,64 @@ if (loginForm && emailInput && passwordInput && btnLogin && msgError) {
             };
 
             if (response.ok) {
-                    const usuario = data.usuario || {};
-                    const estadoId = extractId(usuario.id_estado) || extractId(usuario.idEstado) || null;
-                    const INACTIVO_ID = '693cef998a9247fb779a70c2';
+                const usuario = data.usuario || {};
+                const estadoId = extractId(usuario.id_estado) || extractId(usuario.idEstado) || null;
 
-                    if (estadoId === INACTIVO_ID) {
-                        mostrarError('Este usuario se encuentra inhabilitado');
-                        return;
-                    }
+                try {
+                    const statesResponse = await fetch('http://localhost:3000/estados', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include'
+                    });
 
-                    localStorage.setItem('data', JSON.stringify(data));
-                    console.log(data);
-                    
-                    try {
-                        const roleId = data.usuario.id_rol;
-                        const roleResponse = await fetch(`http://localhost:3000/roles/${roleId}`, {
-                            method: 'GET',
-                            headers: {
-                                'Authorization': `Bearer ${data.token}`,
-                                'Content-Type': 'application/json'
-                            },
-                credentials: "include"
-                        });
+                    if (statesResponse.ok) {
+                        const estados = await statesResponse.json();
+                        const inactivoEstado = estados.find(e => e.nombre && e.nombre.toLowerCase().includes('inactivo'));
+                        const inactivoId = inactivoEstado ? extractId(inactivoEstado) : null;
 
-                        if (roleResponse.ok) {
-                            const roleData = await roleResponse.json();
-                            const nombreRol = (roleData.nombre || '').toLowerCase();
-                            console.log('Rol:', nombreRol);
-
-                            if (nombreRol.includes('administrador')) {
-                                window.location.href = './views/admin/inicioAdmin.html';
-                            } else {
-                                window.location.href = './views/user/inicioUsuario.html';
-                            }
-                        } else {
-                            window.location.href = './views/inicioUsuario.html';
+                        if (inactivoId && estadoId === inactivoId) {
+                            mostrarError('Este usuario se encuentra inhabilitado');
+                            return;
                         }
-                    } catch (error) {
-                        console.error('Error al obtener el rol:', error);
+                    }
+                } catch (error) {
+                    console.error('Error fetching estados:', error);
+                }
+
+                localStorage.setItem('data', JSON.stringify(data));
+                console.log(data);
+
+                try {
+                    const roleId = data.usuario.id_rol;
+                    const roleResponse = await fetch(`http://localhost:3000/roles/${roleId}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${data.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: "include"
+                    });
+
+                    if (roleResponse.ok) {
+                        const roleData = await roleResponse.json();
+                        const nombreRol = (roleData.nombre || '').toLowerCase();
+                        console.log('Rol:', nombreRol);
+
+                        if (nombreRol.includes('administrador')) {
+                            window.location.href = './views/admin/inicioAdmin.html';
+                        } else {
+                            window.location.href = './views/user/inicioUsuario.html';
+                        }
+                    } else {
                         window.location.href = './views/inicioUsuario.html';
                     }
-                } else {
-                    mostrarError(data.message || 'Usuario o contraseña incorrectos');
+                } catch (error) {
+                    console.error('Error al obtener el rol:', error);
+                    window.location.href = './views/inicioUsuario.html';
                 }
+            } else {
+                mostrarError(data.message || 'Usuario o contraseña incorrectos');
+            }
 
         } catch (error) {
             console.error("Error inesperado:", error);

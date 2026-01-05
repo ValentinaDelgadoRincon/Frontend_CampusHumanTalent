@@ -5,13 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienvenido Usuario</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/user/inicioUsuario.css">
 </head>
 
 <body>
     <div class="main-container">
         <header class="header-section">
-            <h1 class="welcome-title" id="welcome">Bienvenido Usuario</h1>
+            <div class="header-logo">
+                <img src="../../multimedia/logoLogin.png" alt="Campus Logo" class="logo-header">
+            </div>
+            <h1 class="welcome-title" id="welcome">Bienvenido <br> Usuario </h1>
             <div class="user-profile">
                 <div class="user-links">
                     <a href="./miPerfil.html" class="profile-link">
@@ -20,7 +24,7 @@
                         </div>
                         VER PERFIL
                     </a>
-                    <a href="#" onclick="localStorage.clear(); window.location.href='../../index.html'; return false;" class="logout-link">CERRAR SESIÓN</a>
+                    <a href="#" onclick="handleLogout(); return false;" class="logout-link">CERRAR SESIÓN</a>
                 </div>
             </div>
         </header>
@@ -37,7 +41,9 @@
         </div>
 
     </div>
+    <script src="../../js/logout.js"></script>
     <script src="../../js/api/UsuariosAPI.js"></script>
+    <script src="../../js/api/AreasGeneralesAPI.js"></script>
     <script src="../../js/api/Areas_TrabajoAPI.js"></script>
     <script src="../../js/user/inicioUsuario.js"></script>
 </body>

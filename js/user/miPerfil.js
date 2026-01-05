@@ -29,6 +29,34 @@ async function loadUserData() {
 
 function fillUserInfo(user) {
     console.log(user);
+
+    try {
+        const avatarEl = document.querySelector('.avatar');
+        if (avatarEl) {
+            const foto = user.foto;
+            let imgSrc = '';
+            if (foto && typeof foto === 'string') {
+                if (foto.startsWith('data:')) imgSrc = foto;
+                else if (foto.startsWith('http')) imgSrc = foto;
+                else imgSrc = `http://localhost:3000/${foto}`;
+            }
+
+            const existingImg = avatarEl.querySelector('img');
+            if (imgSrc) {
+                if (existingImg) {
+                    existingImg.src = imgSrc;
+                    existingImg.alt = `${user.nombre} ${user.apellido}`;
+                    existingImg.style.display = 'block';
+                } else {
+                    avatarEl.innerHTML = `<img src="${imgSrc}" alt="${user.nombre} ${user.apellido}">`;
+                }
+            } else {
+                if (!existingImg) avatarEl.innerHTML = '<i class="fas fa-user"></i>';
+            }
+        }
+    } catch (e) {
+        console.error('Error setting avatar in profile:', e);
+    }
     
     const inputName = document.querySelector('.input-name');
     inputName.innerHTML = `${user.nombre} ${user.apellido}`;

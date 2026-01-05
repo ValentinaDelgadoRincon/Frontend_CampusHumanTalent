@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,15 +8,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../css/admin/crearUsuario.css">
     <style>
-        .input-error { border-color: #b00020 !important; box-shadow: 0 0 0 3px rgba(176,0,32,0.06); }
-        .form-errors ul { margin: 0; padding-left: 18px; }
+        .input-error {
+            border-color: #b00020 !important;
+            box-shadow: 0 0 0 3px rgba(176, 0, 32, 0.06);
+        }
+
+        .form-errors ul {
+            margin: 0;
+            padding-left: 18px;
+        }
     </style>
 </head>
+
 <body>
 
     <div class="main-container">
         <div class="header-nav">
             <a href="#" onclick="window.history.back(); return false;" class="back-arrow fas fa-share"></a>
+            <img src="../../multimedia/logoLogin.png" alt="Campus Logo" class="logo-header">
         </div>
 
         <h1 class="page-title">Crear Nuevo Usuario</h1>
@@ -23,17 +33,19 @@
         <div id="formErrors" class="form-errors" style="color:#b00020;margin:12px 0;display:none;"></div>
 
         <form id="createUserForm" class="content-wrapper">
-            
+
             <div class="form-column">
-                
+
                 <div class="input-row">
                     <input type="text" id="nombre" name="nombre" class="custom-input" placeholder="Nombre" required>
-                    <input type="text" id="apellido" name="apellido" class="custom-input" placeholder="Apellido" required>
+                    <input type="text" id="apellido" name="apellido" class="custom-input" placeholder="Apellido"
+                        required>
                 </div>
 
                 <input type="email" id="email" name="email" class="custom-input" placeholder="Email" required>
-                
-                <input type="password" id="password" name="password" class="custom-input" placeholder="Contraseña" minlength="6" required>
+
+                <input type="password" id="password" name="password" class="custom-input" placeholder="Contraseña"
+                    minlength="6" required>
 
                 <div class="select-wrapper">
                     <select id="area" name="id_area_trabajo" class="custom-input" required>
@@ -49,8 +61,9 @@
                     <i class="fas fa-chevron-down select-icon"></i>
                 </div>
 
-                <input type="tel" id="telefono" name="telefono" class="custom-input" placeholder="Telefono" minlength="10" maxlength="10">
-                
+                <input type="tel" id="telefono" name="telefono" class="custom-input" placeholder="Telefono"
+                    minlength="10" maxlength="10">
+
                 <input type="url" id="linkedin" name="linkedIn" class="custom-input" placeholder="Perfil LinkedIn">
 
             </div>
@@ -80,4 +93,5 @@
     <script src="../../js/api/CargosAPI.js"></script>
     <script src="../../js/admin/crearUsuario.js"></script>
 </body>
+
 </html>

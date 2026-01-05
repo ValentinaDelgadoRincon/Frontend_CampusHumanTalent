@@ -3,6 +3,7 @@ let areasCache = {};
 let cargosCache = {};
 let estadosCache = {};
 let usuarioActual = null;
+let fotoBase64 = null;
 
 function getUserIdFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -74,7 +75,16 @@ function renderUserInfo(user) {
     const imgElement = document.getElementById('userProfileImage');
     const iconElement = document.getElementById('defaultUserIcon');
     if (user.foto) {
-        const imgSrc = user.foto.startsWith('http') ? user.foto : `http://localhost:3000/${user.foto}`;
+        let imgSrc = '';
+        if (typeof user.foto === 'string' && user.foto.startsWith('data:')) {
+            imgSrc = user.foto;
+            fotoBase64 = user.foto;
+        } else if (typeof user.foto === 'string' && user.foto.startsWith('http')) {
+            imgSrc = user.foto;
+        } else {
+            imgSrc = `http://localhost:3000/${user.foto}`;
+        }
+
         if (imgElement) {
             imgElement.src = imgSrc;
             imgElement.style.display = 'block';
@@ -337,6 +347,13 @@ function configureAdminButtonListeners() {
         fotoInput.addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
+                const MAX_FILE_SIZE = 2 * 1024 * 1024;
+                if (file.size > MAX_FILE_SIZE) {
+                    alert('La imagen no puede superar 2 MB. Tamaño actual: ' + (file.size / (1024 * 1024)).toFixed(2) + ' MB');
+                    fotoInput.value = '';
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function (evt) {
                     const preview = document.getElementById('previewFoto');
@@ -346,6 +363,7 @@ function configureAdminButtonListeners() {
                         preview.style.display = 'block';
                     }
                     if (icon) icon.style.display = 'none';
+                    fotoBase64 = evt.target.result;
                 }
                 reader.readAsDataURL(file);
             }
@@ -425,7 +443,16 @@ async function openAdminEditModal() {
     const preview = document.getElementById('previewFoto');
     const icon = document.getElementById('iconCamera');
     if (usuarioActual.foto) {
-        const src = usuarioActual.foto.startsWith('http') ? usuarioActual.foto : `http://localhost:3000/${usuarioActual.foto}`;
+        let src = '';
+        if (typeof usuarioActual.foto === 'string' && usuarioActual.foto.startsWith('data:')) {
+            src = usuarioActual.foto;
+            fotoBase64 = usuarioActual.foto;
+        } else if (typeof usuarioActual.foto === 'string' && usuarioActual.foto.startsWith('http')) {
+            src = usuarioActual.foto;
+        } else {
+            src = `http://localhost:3000/${usuarioActual.foto}`;
+        }
+
         if (preview) {
             preview.src = src;
             preview.style.display = 'block';
@@ -452,8 +479,11 @@ async function saveAdminEditForm(e) {
     const formData = new FormData(form);
 
     const dataObj = Object.fromEntries(formData.entries());
-    
-    delete dataObj.foto;
+    if (fotoBase64) {
+        dataObj.foto = fotoBase64;
+    } else {
+        delete dataObj.foto;
+    }
 
     try {
         const resp = await fetch(`http://localhost:3000/usuarios/admin/${usuarioActual._id}`, {
@@ -476,7 +506,6 @@ async function saveAdminEditForm(e) {
 
         renderUserInfo(usuarioActual);
         closeAdminEditModal();
-        alert('Información actualizada correctamente.');
 
     } catch (error) {
         console.error('Error al guardar datos:', error);

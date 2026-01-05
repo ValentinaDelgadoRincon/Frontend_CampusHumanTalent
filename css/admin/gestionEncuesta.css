@@ -8,6 +8,20 @@
     --shadow-hover: 0 12px 28px rgba(0, 0, 0, 0.14);
 }
 
+.logo-header {
+    height: 150px;
+    object-fit: contain;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.logo-header:hover {
+    transform: scale(1.08) translateY(-2px);
+    filter: drop-shadow(0 6px 16px rgba(0, 38, 90, 0.25));
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -46,12 +60,19 @@ body {
     cursor: pointer;
     text-decoration: none;
     transform: scaleX(-1);
-    -webkit-text-fill-color: transparent;
     transition: transform 0.3s ease;
 }
 
 .back-arrow:hover {
     transform: scaleX(-1) translateX(-4px);
+}
+
+.nav-right {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 
 .page-title-input {

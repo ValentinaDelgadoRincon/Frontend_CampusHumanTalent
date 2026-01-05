@@ -9,6 +9,7 @@ const formErrors = document.getElementById('formErrors');
 
 let rolesCache = {};
 let estadosCache = {};
+let fotoBase64 = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     if (!data || !data.token) {
@@ -73,8 +74,19 @@ async function loadSelectOptions() {
 photoInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) {
+        const maxSize = 2 * 1024 * 1024;
+        if (file.size > maxSize) {
+            alert('La imagen no puede exceder 2MB');
+            photoInput.value = '';
+            fotoBase64 = null;
+            imageDisplay.classList.add('hidden');
+            defaultIcon.style.display = 'block';
+            return;
+        }
+
         const reader = new FileReader();
         reader.onload = function (e) {
+            fotoBase64 = e.target.result;
             imageDisplay.src = e.target.result;
             imageDisplay.classList.remove('hidden');
             defaultIcon.style.display = 'none';
@@ -121,6 +133,10 @@ form.addEventListener('submit', async (e) => {
             id_rol: rolesCache['Empleado'],
             id_estado: estadosCache['Activo']
         };
+
+        if (fotoBase64) {
+            payload.foto = fotoBase64;
+        }
 
         if (!payload.id_rol) {
             console.error('Rol "Empleado" no encontrado');

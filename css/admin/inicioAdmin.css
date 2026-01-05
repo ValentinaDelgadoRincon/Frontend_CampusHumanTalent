@@ -62,7 +62,7 @@ body {
 }
 
 .logo-container img {
-    height: clamp(60px, 8vw, 85px);
+    height: 150px;
 }
 
 

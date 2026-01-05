@@ -1,3 +1,17 @@
+.logo-header {
+    height: 150px;
+    object-fit: contain;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.logo-header:hover {
+    transform: scale(1.08) translateY(-2px);
+    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.15));
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -22,6 +36,48 @@ background-repeat: repeat;
     max-width: 600px;
     background-color: white;
     min-height: 80vh;
+}
+
+.header-section {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    cursor: default;
+}
+
+.nav-left {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-right {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.page-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    text-align: center;
+}
+
+.back-arrow {
+    font-size: 2rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transform: scaleX(-1);
+    padding: 10px;
 }
 
 .back-btn {
@@ -98,7 +154,6 @@ background-repeat: repeat;
     display: inline-block;
     transform: scaleX(-1);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .ciclo-header {
