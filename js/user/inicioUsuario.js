@@ -150,10 +150,9 @@ async function showAreasGenerales() {
         if (selectElement) selectElement.style.display = 'none';
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
-            searchInput.disabled = true;
-            searchInput.placeholder = 'No hay usuarios para buscar';
-            searchInput.value = '';
+            searchInput.style.display = 'none';
         }
+
 
         const areasGenerales = await AreasGeneralesAPI.getAll();
         if (!areasGenerales || areasGenerales.length === 0) {
@@ -227,6 +226,7 @@ function showUsersForAreaGeneral(areaGeneralId) {
 
     const searchInput2 = document.getElementById('searchInput');
     if (searchInput2) {
+        searchInput2.style.display = 'none'
         if (usersForAG.length > 0) {
             searchInput2.disabled = false;
             searchInput2.placeholder = 'Buscar';
