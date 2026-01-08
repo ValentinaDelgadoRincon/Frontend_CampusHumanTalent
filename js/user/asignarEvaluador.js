@@ -15,6 +15,8 @@ let assignedIds = [];
 let allAreaUsers = [];
 let originalAssignedIds = [];
 let pendingChanges = { toAdd: [], toRemove: [] };
+let myAreaTrabajoId = null;
+
 
 async function init() {
     assignedUsersList = document.getElementById('assignedUsersList');
@@ -28,6 +30,12 @@ async function init() {
         return;
     }
 
+    myAreaTrabajoId = extractId(data?.usuario?.id_area_trabajo);
+
+    if (!myAreaTrabajoId) {
+        console.warn('El usuario actual no tiene área de trabajo asignada');
+    }
+    
     try {
         const [users, areas, assignments] = await Promise.all([
             UsuariosAPI.getAll(),
@@ -68,6 +76,14 @@ function extractId(ref) {
     if (ref._id) return (typeof ref._id === 'string') ? ref._id : (ref._id.$oid || null);
     return null;
 }
+
+function userBelongsToMySubArea(user) {
+    if (!myAreaTrabajoId) return false;
+
+    const userAreaTrabajoId = extractId(user.id_area_trabajo);
+    return userAreaTrabajoId === myAreaTrabajoId;
+}
+
 
 function userBelongsToAreaGeneral(user, areaGeneralId) {
     const areaTrabajoId = extractId(user.id_area_trabajo);
@@ -126,8 +142,14 @@ function renderAvailableList(searchFilter = '') {
     const available = allAreaUsers.filter(u => {
         const userId = extractId(u._id);
         const targetId = extractId(targetUserId);
-        return !assignedIds.includes(userId) && userId !== targetId;
+
+        return (
+            !assignedIds.includes(userId) &&
+            userId !== targetId &&
+            !userBelongsToMySubArea(u)
+        );
     });
+
 
     const filtered = available.filter(u => {
         const searchTerm = searchFilter.toLowerCase();
