@@ -2,6 +2,7 @@ const data = JSON.parse(localStorage.getItem('data'));
 const form = document.getElementById('createUserForm');
 const areaSelect = document.getElementById('area');
 const cargoSelect = document.getElementById('cargo');
+const rolSelect = document.getElementById('rol');
 const photoInput = document.getElementById('photoInput');
 const imageDisplay = document.getElementById('imageDisplay');
 const defaultIcon = document.querySelector('.default-icon');
@@ -66,6 +67,13 @@ async function loadSelectOptions() {
             cargoSelect.appendChild(option);
         });
 
+        roles.forEach(rol => {
+            const option = document.createElement('option');
+            option.value = rol._id;
+            option.textContent = rol.nombre;
+            rolSelect.appendChild(option);
+        });
+
     } catch (error) {
         console.error("Error cargando opciones:", error);
     }
@@ -106,6 +114,7 @@ form.addEventListener('submit', async (e) => {
     try {
         const areaValue = areaSelect.value;
         const cargoValue = cargoSelect.value;
+        const rolValue = rolSelect.value;
 
         if (!areaValue) {
             alert('Por favor selecciona un área');
@@ -121,6 +130,13 @@ form.addEventListener('submit', async (e) => {
             return;
         }
 
+        if (!rolValue) {
+            alert('Por favor selecciona un rol');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+            return;
+        }
+
         const payload = {
             nombre: document.getElementById('nombre').value,
             apellido: document.getElementById('apellido').value,
@@ -130,20 +146,12 @@ form.addEventListener('submit', async (e) => {
             id_cargo: cargoValue,
             telefono: document.getElementById('telefono').value || '0000000000',
             linkedIn: document.getElementById('linkedin').value || 'https://www.linkedin.com/in/',
-            id_rol: rolesCache['Empleado'],
+            id_rol: rolValue,
             id_estado: estadosCache['Activo']
         };
 
         if (fotoBase64) {
             payload.foto = fotoBase64;
-        }
-
-        if (!payload.id_rol) {
-            console.error('Rol "Empleado" no encontrado');
-            alert('Error: No se pudo asignar el rol de empleado');
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-            return;
         }
 
         if (!payload.id_estado) {

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/user/asignarEvaluador.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="header-top">
+            <div class="back-arrow">
+                <a href="#" onclick="window.history.back(); return false;" class="fas fa-share"></a>
+            </div>
+            <img src="../../multimedia/logoLogin.png" alt="Campus Logo" class="logo-header">
+        </div>
+
+        <div class="content-wrapper">
+            <div class="left-column">
+                <div class="card-box">
+                    <div class="column-header">
+                        <h3>Usuarios asignados a evaluar</h3>
+                    </div>
+
+                    <div id="assignedUsersList" class="questions-list">
+                        <p>Cargando...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="left-column">
+                <div class="card-box">
+                    <div class="column-header">
+                        <h3>Usuarios disponibles</h3>
+                    </div>
+
+                    <div class="search-box">
+                        <input type="text" id="searchAvailable" placeholder="Buscar usuario...">
+                    </div>
+
+                    <div id="availableUsersList" class="questions-list">
+                        <p>Cargando...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-buttons">
+            <button id="btnGuardar" class="btn-save-blue">
+                <i class="fas fa-save"></i> Guardar cambios
+            </button>
+        </div>
+
+    <script src="../../js/api/UsuariosAPI.js"></script>
+    <script src="../../js/api/Areas_TrabajoAPI.js"></script>
+    <script src="../../js/api/CargosAPI.js"></script>
+    <script src="../../js/user/asignarEvaluador.js"></script>
+</body>
+
+</html>

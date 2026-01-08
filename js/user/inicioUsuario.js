@@ -71,6 +71,7 @@ let currentUserAreaGeneral = null;
 let isAdmin = false;
 let allUsers = [];
 let areasList = [];
+let obligatoriosIds = [];
 
 async function loadAreas() {
     try {
@@ -83,6 +84,32 @@ async function loadAreas() {
         }, {});
     } catch (error) {
         console.error('Error al cargar áreas:', error);
+    }
+}
+
+async function loadObligatorios() {
+    try {
+        const currentUserId = data.usuario._id;
+        const resp = await fetch(`http://localhost:3000/asignaciones-evaluacion/obligatorias/${currentUserId}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${data.token}`,
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+
+        if (!resp.ok) {
+            console.warn('No se pudo cargar usuarios obligatorios');
+            return;
+        }
+
+        const result = await resp.json();
+        if (result.data && result.data.todosObligatorios) {
+            obligatoriosIds = result.data.todosObligatorios.map(u => u._id);
+        }
+    } catch (error) {
+        console.error('Error al cargar usuarios obligatorios:', error);
     }
 }
 
@@ -245,9 +272,8 @@ function renderUsers(users) {
         const nombreCompleto = `${user.nombre} ${user.apellido}`;
         const areaNombre = areasCache[user.id_area_trabajo] || 'Sin área asignada';
 
-        const userAreaGeneral = areasGeneralesCache[user.id_area_trabajo];
-        const isSameAreaGeneral = userAreaGeneral && currentUserAreaGeneral && userAreaGeneral === currentUserAreaGeneral;
-        const requiredMark = isSameAreaGeneral ? '<div class="required-mark">!</div>' : '';
+        const isObligatorio = obligatoriosIds.includes(user._id);
+        const requiredMark = isObligatorio ? '<div class="required-mark">!</div>' : '';
 
         const promedioActitud = user.estadisticas_evaluacion?.promedio_actitud || 0;
         const promedioAptitud = user.estadisticas_evaluacion?.promedio_aptitud || 0;
@@ -274,7 +300,7 @@ function renderUsers(users) {
         }
 
         const cardHTML = `
-            <div class="user-card" data-user-id="${user._id}" data-area-id="${user.id_area_trabajo}" ${isSameAreaGeneral ? 'data-same-area-general="true"' : ''}>
+            <div class="user-card" data-user-id="${user._id}" data-area-id="${user.id_area_trabajo}">
                 ${requiredMark}
                 ${scoreHTML}
                 <div class="card-content">
@@ -345,6 +371,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await checkIsAdmin();
     await loadAreas();
+    await loadObligatorios();
     await loadUsers();
     showAreasGenerales();
 });

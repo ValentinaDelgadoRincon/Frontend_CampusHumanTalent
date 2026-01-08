@@ -1,5 +1,6 @@
 const data = JSON.parse(localStorage.getItem('data'));
 let areasCache = {};
+let areasById = {};
 let cargosCache = {};
 let estadosCache = {};
 let usuarioActual = null;
@@ -38,6 +39,7 @@ async function loadAreasAndCargos() {
         ]);
 
         areasCache = areas.reduce((acc, item) => ({ ...acc, [item._id]: item.nombre }), {});
+        areasById = areas.reduce((acc, item) => ({ ...acc, [item._id]: item }), {});
         cargosCache = cargos.reduce((acc, item) => ({ ...acc, [item._id]: item.nombre }), {});
         estadosCache = (estados || []).reduce((acc, item) => {
             acc[item.nombre] = item._id;
@@ -173,41 +175,94 @@ async function setupAdminButtons() {
         }
 
         const role = await roleResp.json();
-        const isAdmin = (role.nombre || '').toLowerCase().includes('administrador');
+        const roleName = (role.nombre || '').toString();
+        const isAdmin = roleName.toLowerCase().includes('administrador');
+        const isLeader = /líder|lider/i.test(roleName);
 
-        if (!isAdmin) {
+        if (!isAdmin && !isLeader) {
             hideAdminButtons();
             return;
         }
 
-        showAdminButtons();
-        configureAdminButtonListeners();
-        replaceCalificarWithEditar();
-        showCalificarButtonForAdmin();
+        if (isAdmin) {
+            showAdminButtons();
+            configureAdminButtonListeners();
+            replaceCalificarWithEditar();
+            showCalificarButtonForAdmin();
 
-        try {
-            const act = usuarioActual.estadisticas_evaluacion?.promedio_actitud || 0;
-            const apt = usuarioActual.estadisticas_evaluacion?.promedio_aptitud || 0;
+            try {
+                const act = usuarioActual.estadisticas_evaluacion?.promedio_actitud || 0;
+                const apt = usuarioActual.estadisticas_evaluacion?.promedio_aptitud || 0;
 
-            const ratingBox = document.querySelector('.rating-box.admin-only');
-            const ratingNum = document.querySelector('.rating-number');
+                const ratingBox = document.querySelector('.rating-box.admin-only');
+                const ratingNum = document.querySelector('.rating-number');
 
-            if (ratingBox) {
-                if (ratingNum) ratingNum.style.display = 'none';
-                ratingBox.style.display = 'flex';
+                if (ratingBox) {
+                    if (ratingNum) ratingNum.style.display = 'none';
+                    ratingBox.style.display = 'flex';
 
-                document.getElementById('ratingAptitud').textContent = parseFloat(apt).toFixed(1);
-                document.getElementById('ratingActitud').textContent = parseFloat(act).toFixed(1);
-            } else if (ratingNum) {
-                ratingNum.innerHTML = `<span style="font-size:1.4rem; display:block">Act: ${parseFloat(act).toFixed(1)}</span><span style="font-size:1.4rem">Apt: ${parseFloat(apt).toFixed(1)}</span>`;
+                    document.getElementById('ratingAptitud').textContent = parseFloat(apt).toFixed(1);
+                    document.getElementById('ratingActitud').textContent = parseFloat(act).toFixed(1);
+                } else if (ratingNum) {
+                    ratingNum.innerHTML = `<span style="font-size:1.4rem; display:block">Act: ${parseFloat(act).toFixed(1)}</span><span style="font-size:1.4rem">Apt: ${parseFloat(apt).toFixed(1)}</span>`;
+                }
+
+                const ponderado = (parseFloat(act) + parseFloat(apt)) / 2 || 0;
+                const ponderEl = document.getElementById('ponderadoValue');
+                if (ponderEl) ponderEl.textContent = parseFloat(ponderado).toFixed(1);
+
+            } catch (e) {
+                console.error('Error mostrando ratings detallados:', e);
             }
+        }
 
-            const ponderado = (parseFloat(act) + parseFloat(apt)) / 2 || 0;
-            const ponderEl = document.getElementById('ponderadoValue');
-            if (ponderEl) ponderEl.textContent = parseFloat(ponderado).toFixed(1);
+        if (isLeader) {
+            try {
+                const extractIdSimple = (ref) => {
+                    if (!ref) return null;
+                    if (typeof ref === 'string') return ref;
+                    if (ref.$oid) return ref.$oid;
+                    if (ref._id) return (typeof ref._id === 'string') ? ref._id : (ref._id.$oid || null);
+                    return null;
+                };
 
-        } catch (e) {
-            console.error('Error mostrando ratings detallados:', e);
+                const leaderAreaId = extractIdSimple(currentUser.id_area_trabajo);
+                const viewedAreaId = extractIdSimple(usuarioActual?.id_area_trabajo);
+
+                const leaderArea = leaderAreaId ? areasById[leaderAreaId] : null;
+                const viewedArea = viewedAreaId ? areasById[viewedAreaId] : null;
+
+                const leaderGeneralId = extractIdSimple(leaderArea?.id_area_general);
+                const viewedGeneralId = extractIdSimple(viewedArea?.id_area_general);
+                if (leaderGeneralId && viewedGeneralId && leaderGeneralId === viewedGeneralId) {
+                    const adminFooter = document.querySelector('.admin-footer');
+                    if (adminFooter) {
+                        adminFooter.innerHTML = '';
+                        adminFooter.style.display = 'flex';
+                        adminFooter.style.justifyContent = 'flex-end';
+                        adminFooter.style.alignItems = 'center';
+
+                        if (!document.getElementById('btnAsignarEvaluador')) {
+                            const btn = document.createElement('button');
+                            btn.id = 'btnAsignarEvaluador';
+                            btn.className = 'admin-btn btn-outline';
+                            btn.textContent = 'Asignar evaluados';
+                            btn.style.flex = '0 0 auto';
+                            btn.style.minWidth = '150px';
+                            btn.style.padding = '10px 18px';
+                            btn.style.marginRight = '8px';
+                            btn.addEventListener('click', () => {
+                                window.location.href = `../user/asignarEvaluador.html?areaGeneralId=${leaderGeneralId}&userId=${usuarioActual._id}`;
+                            });
+                            adminFooter.appendChild(btn);
+                        }
+                    }
+                } else {
+                    if (!isAdmin) hideAdminButtons();
+                }
+            } catch (e) {
+                console.error('Error mostrando botón de líder:', e);
+            }
         }
 
     } catch (error) {
