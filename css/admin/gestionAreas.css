@@ -8,6 +8,10 @@
     --accent-blue: #1e6fff;
 }
 
+.header{
+    padding-top: 16px
+}
+
 .logo-header {
     height: 150px;
     object-fit: contain;

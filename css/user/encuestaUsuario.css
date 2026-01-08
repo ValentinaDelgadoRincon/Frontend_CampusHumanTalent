@@ -61,7 +61,7 @@ header {
 .back-arrow {
     position: absolute;
     left: 0;
-    top: 30%;
+    top: 10%;
     transform: translateY(-50%) scaleX(-1);
     font-size: 2.3rem;
     cursor: pointer;
