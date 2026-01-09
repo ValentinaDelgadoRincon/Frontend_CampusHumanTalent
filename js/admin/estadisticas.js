@@ -5,6 +5,8 @@ let currentAreaGeneralId = null;
 let usuariosCache = [];
 let areasTrabajoCache = [];
 
+const backArrow = document.getElementById('backArrow');
+
 document.addEventListener('DOMContentLoaded', () => {
     if (!data || !data.token) {
         window.location.href = '../../index.html';
@@ -12,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     loadStatistics();
 
-const backArrow = document.getElementById('backArrow');
+
 
 backArrow.addEventListener('click', (e) => {
     e.preventDefault();

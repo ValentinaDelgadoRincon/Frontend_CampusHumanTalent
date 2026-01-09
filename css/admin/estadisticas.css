@@ -47,7 +47,7 @@ background-repeat: repeat;
     text-decoration: none;
     display: inline-block;
     transform: scaleX(-1);
-    color: var(--primary-blue);
+    color: var(--dark-blue);
     transition: transform 0.2s ease;
 }
 
@@ -100,27 +100,6 @@ background-repeat: repeat;
     margin-bottom: 20px;
 }
 
-.back-button-new {
-    padding: 10px 20px;
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    border: 2px solid white;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-}
-
-.back-button-new:hover {
-    background-color: white;
-    color: #083b63;
-    transform: translateX(-5px);
-}
 
 .sub-areas-title {
     color: white;
