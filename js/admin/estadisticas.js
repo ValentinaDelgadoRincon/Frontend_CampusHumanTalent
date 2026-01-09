@@ -11,6 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     loadStatistics();
+
+const backArrow = document.getElementById('backArrow');
+
+backArrow.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    if (currentView === 'sub-areas') {
+        loadStatistics();
+    } else {
+        window.history.back();
+    }
+});
 });
 
 async function loadStatistics() {
@@ -98,9 +110,7 @@ function showSubAreas(areaGeneralId, areaGeneralName) {
 
     const subAreasHeader = document.createElement('div');
     subAreasHeader.className = 'sub-areas-header';
-    subAreasHeader.innerHTML = `<div class="header-left">
-                <a href="#" onclick="loadStatistics(); return false;" class="back-arrow fas fa-share"></a>
-            </div>
+    subAreasHeader.innerHTML = `
         <h2 class="sub-areas-title">${areaGeneralName}</h2>
     `;
     statsGrid.appendChild(subAreasHeader);
