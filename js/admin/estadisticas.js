@@ -98,10 +98,9 @@ function showSubAreas(areaGeneralId, areaGeneralName) {
 
     const subAreasHeader = document.createElement('div');
     subAreasHeader.className = 'sub-areas-header';
-    subAreasHeader.innerHTML = `
-        <button class="back-button-new" onclick="loadStatistics()">
-            <i class="fas fa-arrow-left"></i> Volver a Áreas Generales
-        </button>
+    subAreasHeader.innerHTML = `<div class="header-left">
+                <a href="#" onclick="loadStatistics(); return false;" class="back-arrow fas fa-share"></a>
+            </div>
         <h2 class="sub-areas-title">${areaGeneralName}</h2>
     `;
     statsGrid.appendChild(subAreasHeader);
