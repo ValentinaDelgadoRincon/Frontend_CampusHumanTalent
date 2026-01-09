@@ -53,6 +53,7 @@ body {
     background: linear-gradient(135deg, #0033a0, #00bfff);
     -webkit-background-clip: text;
     transition: transform 0.3s ease;
+    text-decoration: none;
 }
 
 .back-arrow a:hover {

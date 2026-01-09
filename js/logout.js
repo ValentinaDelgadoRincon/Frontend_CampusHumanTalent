@@ -7,14 +7,6 @@ async function handleLogout() {
             return;
         }
 
-        const isAdmin = await checkIfAdmin(data);
-        
-        if (isAdmin) {
-            localStorage.clear();
-            window.location.href = '../../index.html';
-            return;
-        }
-
         const response = await fetch('http://localhost:3000/usuarios/logout', {
             method: 'POST',
             headers: {
@@ -60,7 +52,6 @@ async function handleLogout() {
     }
 }
 
-// Función auxiliar para verificar si el usuario es administrador
 async function checkIfAdmin(data) {
     try {
         const roleId = data.usuario.id_rol;

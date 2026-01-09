@@ -31,10 +31,9 @@
 body {
     background-color: var(--white);
     min-height: 100vh;
-    padding: 30px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background-image:
         linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
@@ -54,7 +53,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
 }
 
 .back-arrow {
@@ -76,8 +74,7 @@ body {
     font-size: clamp(2rem, 4vw, 2.6rem);
     font-weight: 900;
     color: var(--dark-blue);
-    margin-bottom: 55px;
-    margin-top: 10px;
+    margin-bottom: 30px;
     text-transform: uppercase;
 }
 

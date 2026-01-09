@@ -13,17 +13,18 @@
 }
 
 .logo-header {
-    height: 150px;
+    max-height: 110px;
+    height: auto;
     object-fit: contain;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all 0.25s ease;
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
-    padding: 8px;
     border-radius: 8px;
+    display: block;
 }
 
 .logo-header:hover {
-    transform: scale(1.08) translateY(-2px);
-    filter: drop-shadow(0 6px 16px rgba(30, 111, 255, 0.25));
+    transform: translateY(-2px) scale(1.03);
+    filter: drop-shadow(0 6px 16px rgba(30, 111, 255, 0.18));
 }
 
 * {
@@ -37,7 +38,7 @@
 body {
     background-color: var(--white);
     min-height: 100vh;
-    padding: 20px;
+    padding-top: 50px;
     display: flex;
     justify-content: center;
     background-image:
@@ -51,7 +52,7 @@ body {
     width: 100%;
     max-width: 900px;
     position: relative;
-    padding-bottom: 80px;
+    padding-bottom: 160px;
 }
 
 
@@ -60,7 +61,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 40px;
+    margin-bottom: 80px;
 }
 
 .nav-left {
@@ -315,9 +316,6 @@ body {
 
 
 .fab-btn {
-    position: fixed;
-    bottom: 40px;
-    left: 40px;
     width: 70px;
     height: 70px;
     background: linear-gradient(135deg, #00265a, #0047ab);
@@ -331,12 +329,19 @@ body {
     cursor: pointer;
     box-shadow: 0 15px 30px rgba(0, 38, 90, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    z-index: 100;
+    z-index: 1100;
+    position: fixed;
+    left: 36px;
+    bottom: 36px;
 }
 
 .fab-btn:hover {
-    transform: scale(1.15) rotate(90deg);
+    transform: scale(1.12) rotate(90deg);
     box-shadow: 0 25px 45px rgba(0, 38, 90, 0.5);
+}
+
+@media (max-width: 800px) {
+    .fab-btn { left: 20px; bottom: 20px; width: 60px; height: 60px; }
 }
 
 
