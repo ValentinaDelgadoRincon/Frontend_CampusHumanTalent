@@ -147,7 +147,7 @@ function renderUserInfo(user) {
 
     const btnCalificar = document.getElementById('btnCalificarUser');
     if (btnCalificar) btnCalificar.href = `../../views/user/encuestaUsuario.html?id=${user._id}`;
-    
+
     const btnCalificarAdmin = document.getElementById('btnCalificarAdmin');
     if (btnCalificarAdmin) btnCalificarAdmin.href = `../../views/user/encuestaUsuario.html?id=${user._id}`;
 }
@@ -204,8 +204,40 @@ async function setupAdminButtons() {
                     document.getElementById('ratingAptitud').textContent = parseFloat(apt).toFixed(1);
                     document.getElementById('ratingActitud').textContent = parseFloat(act).toFixed(1);
                 } else if (ratingNum) {
-                    ratingNum.innerHTML = `<span style="font-size:1.4rem; display:block">Act: ${parseFloat(act).toFixed(1)}</span><span style="font-size:1.4rem">Apt: ${parseFloat(apt).toFixed(1)}</span>`;
-                }
+                    ratingNum.innerHTML = `
+  <div style="
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    text-align: center;
+  ">
+    <div>
+      <span style="display:block; font-size:1rem; font-weight:600;">
+        Aptitud
+      </span>
+      <span style="
+        font-size:1.6rem;
+        font-weight:bold;
+        color:#FFC107;
+      ">
+        ${parseFloat(apt).toFixed(1)}
+      </span>
+    </div>
+
+    <div>
+      <span style="display:block; font-size:1rem; font-weight:600;">
+        Actitud
+      </span>
+      <span style="
+        font-size:1.6rem;
+        font-weight:bold;
+        color:#FFC107;
+      ">
+        ${parseFloat(act).toFixed(1)}
+      </span>
+    </div>
+  </div>
+`;                }
 
                 const ponderado = (parseFloat(act) + parseFloat(apt)) / 2 || 0;
                 const ponderEl = document.getElementById('ponderadoValue');
@@ -429,9 +461,9 @@ function configureAdminButtonListeners() {
 function populateSelectCargo() {
     const select = document.getElementById('id_cargo');
     if (!select) return Promise.resolve();
-    
+
     select.innerHTML = '<option value="">Seleccione un cargo</option>';
-    
+
     return CargosAPI.getAll().then(cargos => {
         cargos.forEach(cargo => {
             const option = document.createElement('option');
@@ -447,9 +479,9 @@ function populateSelectCargo() {
 function populateSelectArea() {
     const select = document.getElementById('id_area_trabajo');
     if (!select) return Promise.resolve();
-    
+
     select.innerHTML = '<option value="">Seleccione un área</option>';
-    
+
     return Areas_TrabajoAPI.getAll().then(areas => {
         areas.forEach(area => {
             const option = document.createElement('option');
