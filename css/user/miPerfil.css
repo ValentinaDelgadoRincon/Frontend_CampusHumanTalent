@@ -14,7 +14,7 @@
 }
 
 .header-top img {
-    height: 150px;
+    height: 180px;
     object-fit: contain;
     transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
@@ -34,11 +34,9 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    background-image:
-    linear-gradient(to right, #cccccc36 1px, transparent 1px),
-    linear-gradient(to bottom, #cccccc52 1px, transparent 1px); 
-background-size: 20px 20px;
-background-repeat: repeat; 
+    background: url('../../multimedia/fondo.png') no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .container {

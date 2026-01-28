@@ -33,10 +33,9 @@ body {
     min-height: 100vh;
     padding: 20px 40px;
     background-color: var(--white);
-    background-image:
-        linear-gradient(to right, #cccccc25 1px, transparent 1px),
-        linear-gradient(to bottom, #cccccc25 1px, transparent 1px);
-    background-size: 20px 20px;
+    background: url('../../multimedia/fondo.png') no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 

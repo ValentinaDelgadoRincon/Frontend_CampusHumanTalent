@@ -19,10 +19,9 @@ body {
     background-color: #fdfdfd;
     min-height: 100vh;
     padding: 20px 40px;
-    background-image:
-        linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background: url('../../multimedia/fondo.png') no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .admin-container {
@@ -62,7 +61,7 @@ body {
 }
 
 .logo-container img {
-    height: 150px;
+    height: 200px;
 }
 
 

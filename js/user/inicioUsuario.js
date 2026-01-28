@@ -73,6 +73,18 @@ let allUsers = [];
 let areasList = [];
 let obligatoriosIds = [];
 
+function getAreaColorClass(areaName) {
+    const colorMap = {
+        'Comercial': 'area-blue',
+        'Administración': 'area-green',
+        'Full Service': 'area-orange',
+        'Formación': 'area-yellow',
+        'People and Talent': 'area-purple',
+        'Tecnología': 'area-red'
+    };
+    return colorMap[areaName] || 'area-default';
+}
+
 async function loadAreas() {
     try {
         const areas = await Areas_TrabajoAPI.getAll();
@@ -167,6 +179,8 @@ async function showAreasGenerales() {
         areasGenerales.forEach(ag => {
             const card = document.createElement('div');
             card.className = 'area-general-card';
+            const colorClass = getAreaColorClass(ag.nombre);
+            card.classList.add(colorClass);
             card.setAttribute('data-ag-id', ag._id);
             card.style.cursor = 'pointer';
             card.innerHTML = `

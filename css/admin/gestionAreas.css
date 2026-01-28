@@ -13,7 +13,7 @@
 }
 
 .logo-header {
-    max-height: 110px;
+    max-height: 180px;
     height: auto;
     object-fit: contain;
     transition: all 0.25s ease;
@@ -41,11 +41,9 @@ body {
     padding-top: 50px;
     display: flex;
     justify-content: center;
-    background-image:
-        linear-gradient(to right, #cccccc36 1px, transparent 1px),
-        linear-gradient(to bottom, #cccccc52 1px, transparent 1px);
-    background-size: 20px 20px;
-    background-repeat: repeat;
+    background: url('../../multimedia/fondo.png') no-repeat;
+    background-size: cover;
+    background-position: center;
 }
 
 .main-container {
