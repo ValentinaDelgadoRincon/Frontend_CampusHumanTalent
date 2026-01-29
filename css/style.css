@@ -31,7 +31,7 @@ body {
     align-items: center;
     background: url('../multimedia/fondo.jpeg') no-repeat;
     background-size: cover;
-    background-position: center;
+    background-position: left center;
 }
 
 .container {

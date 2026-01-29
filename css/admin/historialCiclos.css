@@ -26,7 +26,7 @@ body {
     padding: 40px 20px;
     background: url('../../multimedia/fondo.jpeg') no-repeat;
     background-size: cover;
-    background-position: center;
+    background-position: left center;
 }
 
 .main-container {

@@ -80,7 +80,7 @@ function getAreaColorClass(areaName) {
         'Full Service': 'area-orange',
         'Formación': 'area-yellow',
         'People and Talent': 'area-purple',
-        'Tecnología': 'area-red'
+        'Tics': 'area-red'
     };
     return colorMap[areaName] || 'area-default';
 }
