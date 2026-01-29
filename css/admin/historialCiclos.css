@@ -24,7 +24,7 @@ body {
     display: flex;
     justify-content: center;
     padding: 40px 20px;
-    background: url('../../multimedia/fondo.png') no-repeat;
+    background: url('../../multimedia/fondo.jpeg') no-repeat;
     background-size: cover;
     background-position: center;
 }

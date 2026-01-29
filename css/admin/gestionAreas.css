@@ -41,7 +41,7 @@ body {
     padding-top: 50px;
     display: flex;
     justify-content: center;
-    background: url('../../multimedia/fondo.png') no-repeat;
+    background: url('../../multimedia/fondo.jpeg') no-repeat;
     background-size: cover;
     background-position: center;
 }

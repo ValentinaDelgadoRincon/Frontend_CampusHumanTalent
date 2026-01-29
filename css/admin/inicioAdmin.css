@@ -19,7 +19,7 @@ body {
     background-color: #fdfdfd;
     min-height: 100vh;
     padding: 20px 40px;
-    background: url('../../multimedia/fondo.png') no-repeat;
+    background: url('../../multimedia/fondo.jpeg') no-repeat;
     background-size: cover;
     background-position: center;
 }
