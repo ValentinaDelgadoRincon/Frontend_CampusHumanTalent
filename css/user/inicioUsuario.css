@@ -36,7 +36,14 @@ body {
     padding: 10px;
     background: url('../../multimedia/fondo.jpeg') no-repeat;
     background-size: cover;
-    background-position: left center;
+    background-position: calc(-12vw) center;
+    transition: background-position 240ms ease;
+}
+
+@media (max-width: 900px) {
+    body {
+        background-position: left center;
+    }
 }
 
 .main-container {
